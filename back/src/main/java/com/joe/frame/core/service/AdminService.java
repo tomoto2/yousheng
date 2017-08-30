@@ -257,6 +257,7 @@ public class AdminService {
 				long qixiaAndDirect = agentService.getDirectChilsAllChils(searchTime,p.getPid());//代理旗下所有直属下级总业绩*对应的返利比，相加之和     //旗下代理返利：直属A*对应的返利比  + 直属B * 对应的返利比
 				long shijiFanli = AllFanli - qixiaAndDirect;//代理实际返利金额
 				CashOut cashOut = cashOutRepository.findByPid(p.getPid());
+				logger.info("代理{}的提现记录{}",p.getPid(),cashOut);
 				//	提现申请：两种状态——未申请，已申请（鼠标移动上去显示代理人提交的微信账号或者支付宝账号和支付宝姓名）
 				//	状态：两种状态——已处理，“处理”做成按钮（点击后转换为已处理），
 				if(cashOut!= null && cashOut.getStatus()!= null){
@@ -264,6 +265,7 @@ public class AdminService {
 					dto.setCashOutId(cashOut.getId());
 					if(cashOut.getDealWith()!= null){
 						dto.setDealWith(cashOut.getDealWith());
+						logger.info("设置处理状态{}为",cashOut.getDealWith(),dto.getDealWith());
 					}
 				}
 				dto.setName(realname);
