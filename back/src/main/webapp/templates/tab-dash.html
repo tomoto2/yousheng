@@ -1,0 +1,82 @@
+
+<ion-view view-title="名门互娱" >
+ <ion-content>
+ 	<ion-refresher
+    pulling-text="下拉刷新..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+    <div style="height:6rem;background:#ff7733;">
+        <div style="padding-left: 32px;float: left;"> 
+        	<div id="tx-1">
+        		<p style="padding-top: 20px;color: white;">账户余额</p>
+                <p style="color: white;"><span style="">￥{{zahuzheng}}</span>.{{zahuxiaoshu}}</p>
+        	</div>
+        </div>
+        <div style="float: right;">
+        	<button ng-click="tiXianFn()" class="button" style=" width: 100px;border-radius: 24%/50%; background-color:#ff7733;color:white;margin-top: 35px;margin-right: 23px;border: 1px solid white;">
+					    提现
+			</button>
+        </div>
+    </div>
+    <div style="padding: 0px 15px;">
+    	<div id="tx-2" style="border-bottom: 1px solid #ccc;height: 5rem;">
+    		<div style="padding-left: 20px;float: left;"> 
+	        	<div >
+	        		<p style="padding-top: 20px;color: #b1b1b1;">本月实际返利</p>
+	                <p style="color: black;text-align: center;"><span style="">￥{{byzheng}}</span>.{{byxiaoshu}}</p>
+	        	</div>
+	        </div>
+	        <div style="float: right;">
+	        	<div style="padding-right: 20px;">
+	        		<p style="padding-top: 20px;color: #b1b1b1;">上月实际返利</p>
+	                <p style="color: black;text-align: center;"><span style="">￥{{syzheng}}</span>.{{syxiaoshu}}</p>
+	        	</div>
+	        </div>
+    	</div>
+    	<div style="border-bottom: 1px solid #ccc;height: 4rem;padding: 15px 20px;">
+    		   <div style="border: 1px solid gray;width: 30px;height: 30px;border-radius: 50%;float: left;">
+    		   	
+    		   </div>
+    		   <div id="tx-bl" style="">返利比例计算标准</div>
+    	</div>
+    	<div id="bLiJs">
+    		<div>
+    			<div  class="row p1" >
+    				<div class="col">个人总业绩</div>
+    				<div class="col" >返利比例</div>
+    				<div class="col" >个人总返利</div>
+    			</div>
+    			<div  class="row p2" >
+    				<div class="col" >{{fenLidata.benAllyeji}}</div>
+    				<div class="col" >{{fenLidata.benfanlibi}}</div>
+    				<div class="col" >{{fenLidata.benAllfanli}}</div>
+    			</div>
+    		</div>
+    		<div style="margin-top: 16px;">
+    			 <div ng-click="yueJiFn()" style="text-align: center;color: #ff7733;">
+    			 	  查看其他月份业绩
+    			 </div>
+    		</div>
+    	</div>
+    	<div id="yeji" style="margin-bottom: 10px;">
+    		<div>
+    			<div  class="row p1" >
+    				<div class="col">旗下代理购卡金额</div>
+    				<div class="col" >旗下代理返利</div>
+    				<div class="col" >你实际返利</div>
+    			</div>
+    			<div  class="row p2" >
+    				<div class="col">{{fenLidata.benqixiaAllMoney}}</div>
+    				<div class="col" >{{fenLidata.benqixiaAllFanli}}</div>
+    				<div class="col" >{{fenLidata.preShijiFanli}}</div>
+    			</div>
+    		</div>
+    		<div style="margin-top: 16px;">
+    			 <div ng-click="daiLiFn()" style="text-align: center;color: #ff7733;">
+    			 	  查看其他代理业绩
+    			 </div>
+    		</div>
+    	</div>    	
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,50 @@
+  <div>
+	    	<nav class="" style="height: 60px;line-height: 60px;background-color: white;">
+				<div class="sous" style="position: relative;">
+					<i ng-click="jgsousFn()" class="Hui-iconfont Hui-iconfont-search2" style=" "></i>
+					<input id="jginput" type="search" placeholder="搜索" value="" style="float: left;margin-left: 20px;" />	
+				</div>
+			</nav>
+			
+			<div class="daoh" style="margin-left: 0px;color: white;">
+				<div class="col1">代理ID</div>
+				<div class="col1">代理昵称</div>
+				<div class="col1">俱乐部ID</div>
+				<div class="col1">代理购卡数</div>
+				<div class="col1">代理购卡额</div>
+				<div class="col1">下级代理总数</div>
+				<div class="col160">下级代理购卡总数</div>
+				<div class="col160">下级代理购卡总金额</div>
+				<div class="col1">上级代理</div>
+				<div class="col100">代理等级</div>
+				<div class="col100">操作</div>
+			</div>
+			<div ng-repeat="item in jiagouData" style="background: white;height: 44px;">
+					<div class="col1">{{item.inviteCode}}</div>
+					<div class="col1">{{item.nikeName}}</div>
+					<div class="col1">{{item.inviteCode}}</div>
+					<div class="col1">{{item.allgoumai}}</div>
+					<div class="col1">{{item.allchongzhi}}</div>
+					<div class="col1">{{item.childSum}}</div>
+					<div class="col160">{{item.childBuySum}}</div>
+					<div class="col160">{{item.childMoneySum}}</div>
+					<div class="col1">{{item.parentPhone}}</div>
+					<div class="col100">{{item.level}}</div>
+					<div class="col100">
+						<button ng-disabled='{{item.canuse}}' ng-click="qiyFn($index,$event)" ng-class="{true:'wuxiao',false:'kedian'}[item.canuse]" class="btn radius" style="width: 44px;padding: 0px; font-size: 10px;">启用</button>
+						<button ng-disabled='!{{item.canuse}}' ng-click="jinyFn($index,$event)" ng-class="{true:'kedian',false:'wuxiao'}[item.canuse]" class="btn radius" style="width: 44px;padding: 0px; font-size: 10px;">禁用</button>
+					</div>
+			</div>
+			<div class="page">
+				<ul class="pageMenu clearfix">
+					 <li id="jgs" class="prevPage" ng-click="jgsyyFn()"> < 上一页 </li>
+					 <div class="pageObj ">
+						
+					 </div>
+					 <li id="jgx" class="nextPage" ng-click="jgxyyFn()"> 下一页 > </li>
+					 <li class="last" style="font-size: 14px;">
+					  	共<span class="totalPage">{{count3}}</span>页
+					 </li>
+				 </ul>
+		</div>	
+</div>

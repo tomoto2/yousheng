@@ -1,0 +1,64 @@
+<ion-view title="我的信息">
+  <ion-content>
+  	<div style="background:#f2f2f2 ;">
+  		    <div style="height: 10rem;background: #ff7733;">
+    					<div class="wo-sou" style="">
+    		 				<span>{{xinData.nikeName}}</span>
+    		 				<span style="float: right;margin-right: 30px;">市代</span>
+    					</div>
+   				 </div>
+    			<div class="wo-hang" style="">
+    				 <div class="wo-hang-1" style=" border-bottom: 1px solid #ccc;">
+    	    	    <span>当前房卡</span>
+    		        <span style="float: right;">{{xinData.card}}</span>
+             </div>
+             <div class="wo-hang-1"  style="">
+    	          <span>邀请码</span>
+    		        <span style="float: right;">{{xinData.inviteCode}}</span>
+             </div>
+          </div>
+          <div class="wo-hang" style="margin-top: 10px;"> 
+             <div class="wo-hang-1" ng-click="xinxGaiFn()"  style="border-bottom: 1px solid #ccc;">
+    	          <span>个人信息修改</span>
+    		        <span style="float: right;">
+    		        	<i class="icon ion-ios-arrow-right"></i>
+    		        </span>
+             </div>
+              <div ng-click="julebuFn()"  class="wo-hang-1"  style="border-bottom: 1px solid #ccc;">
+    	          <span>俱乐部公告</span>
+    		        <span style="float: right;">
+    		        	<i class="icon ion-ios-arrow-right"></i>
+    		        </span>
+             </div>
+              <div ng-click="goukaFn()" class="wo-hang-1"  style="border-bottom: 1px solid #ccc;">
+    	          <span>购卡记录</span>
+    		        <span style="float: right;">
+    		        	<i class="icon ion-ios-arrow-right"></i>
+    		        </span>
+             </div>
+              <div class="wo-hang-1"  style="">
+    	          <span>我的推广链接</span>
+    		        <span style="float: right;">
+    		        	<i class="icon ion-ios-arrow-right"></i>
+    		        </span>
+             </div>
+         </div>  
+  	
+  			  <div class="wo-hang" style="margin-top: 10px;"> 
+             <div ng-click="xieyiFn()"  class="wo-hang-1"  style="">
+    	          <span>名门互娱协议标准</span>
+    		        <span style="float: right;">
+    		        	<i class="icon ion-ios-arrow-right"></i>
+    		        </span>
+             </div>
+             <div class="wo-hang-1"  style="">
+    	          <span ng-click="gaimimaFn()" style="color: #000;">修改密码</span>
+    		        
+             </div>
+         </div>  
+  	
+  	
+  	</div>
+  
+  </ion-content>
+</ion-view>

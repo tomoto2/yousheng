@@ -1,0 +1,151 @@
+.nowTd-date{
+  border-style:solid;
+  border-width:1px;
+  text-align:center; 
+  cursor:default;
+  border-color:#ccc;
+  
+  background-color:#6fa8dc;
+}
+.select-date{
+  /*border-style:solid;*/
+  /*border-width:1px;*/
+  /*cursor:default;*/
+  text-align:center;
+  /*border-color:#ccc;*/
+  
+  /*background-color:#ccc;*/
+}
+.default-date{
+  border-style:solid;
+  border-width:1px;
+  height:32px;
+  text-align:center; 
+  cursor:default;
+  border-color:#ccc;
+  
+  background-color:white;
+}
+.noTheNow-date{
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+  color:#fb9c22;
+  height:32px;
+  text-align:center; 
+  cursor:default;
+}
+
+
+
+
+.nowTd-year{
+  border-style:solid;
+  border-width:1px;
+  text-align:center; 
+  cursor:default;
+  border-color:#ccc;
+  
+  width:25%;
+  height:75px;
+  background-color:#6fa8dc;
+}
+.select-year{
+  border-style:solid;
+  border-width:1px;
+  cursor:default;
+  text-align:center;
+  border-color:#ccc;
+  
+  width:25%;
+  height:75px;
+  background-color:#ccc;
+}
+.default-year{
+  border-style:solid;
+  border-width:1px;
+  text-align:center; 
+  cursor:default;
+  border-color:#ccc;
+  
+  width:25%;
+  height:75px;
+  background-color:white;
+}
+.noTheNow-year{
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+  text-align:center; 
+  cursor:default;
+  
+  width:25%;
+  color:#fce5cd;
+  height:75px;
+}
+
+
+
+
+.topDate{
+  height:30px;
+  width:100px;
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+  text-align:center; 
+  cursor:default;
+}
+.btn{
+  background-color:#ccc;
+  height:30px;
+  width:99%;
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+  text-align:center; 
+  cursor:default;
+}
+.mouseOver{
+  background-color:#a4c2f4;
+
+  text-align:center;
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+}
+
+.fundusDiv{
+  font-size:12px;
+  width:85%;
+  position: absolute;
+  z-index: 2;
+  margin-left: 5%;
+}
+
+.dateDiv{
+  background-color:#ffffff;
+  border-style:solid;
+  border-width:1px;
+  border-collapse:collapse;
+  width:100%;
+  background-color:white;
+}
+.yearDiv{
+  background-color:#ffffff;
+  border-style:solid;
+  border-collapse:collapse;
+  border:1px;
+  width:100%;
+  background-color:white;
+}
+.topDiv{
+  border:1px;
+  height:30px;
+  width:100%;
+  border-style:solid;
+  border-width:1px;
+  border-color:#ccc;
+  text-align:center; 
+  cursor:default;
+}

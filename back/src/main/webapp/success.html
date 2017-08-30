@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>支付结果</title>
+</head>
+<body>
+支付成功！
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript">
+$(function() {
+	function GetUrlPara()
+	　　{
+	　　　　var url = document.location.toString();
+	　　　　var arrUrl = url.split("?");	
+	　　　　var para = arrUrl[1];
+	　　　　return para;
+	　　}
+	
+	var params= GetUrlPara();
+	
+    $.ajax({
+         url:"http://localhost/ws/pay/ali/justStatus",
+         type:"POST",
+         contentType:"application/json",
+         data:params,
+         success:function(res){
+         	if(res.status==0){
+         		alert(res.errorMessage);
+         	}else{
+         		alert(res.errorMessage);
+         	}
+         },
+         error:function(res){
+             console.log(res)
+         }
+     })
+	
+	
+	;});
+</script>
+</body>
+</html>

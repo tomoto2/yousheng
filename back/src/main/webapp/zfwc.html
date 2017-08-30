@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1, minimum-scale=1">
+    <title>支付成功</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="js/services.js"></script>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <style type="text/css">
+   @media (min-width: 400px) and (max-width: 767px) {
+   
+    div{font-size: 140px;}
+  }
+@media (min-width: 360px) and (max-width: 400px) {
+  
+   div{font-size: 120px;}
+}
+@media (max-width: 359px) {
+   
+   div{font-size: 84px;}
+}
+  #cg{
+  	color: #0ed91d;
+  	display: none;
+  }
+  #sb{
+  	color: red;
+  	display: none;
+  }
+    </style>
+  </head>
+  <body>
+     <div style="text-align: center;padding-top: 85px;">
+     	 <i id="cg" class="icon ion-ios-checkmark" ></i>
+     	 <i id="sb" class="icon ion-close-circled"></i>
+     </div>
+    <div style="margin: 40px 20px;">
+    	<button class="button button-full button-balanced">
+  			完成
+        </button>
+    </div>
+    
+  </body>
+  <script type="text/javascript">
+  	$("#sb").show()
+  	$.ajax({
+		url:'http://localhost/ws/account/getuserToken',
+		type:"GET",
+		async:false,
+    success:function(res){
+         	datas=res;
+         	 console.log(res)
+    },
+    error:function(res){
+          console.log(res)
+    }
+	});
+  </script>
+</html>

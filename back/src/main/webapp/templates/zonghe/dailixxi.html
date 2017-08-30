@@ -1,0 +1,50 @@
+<ion-view hide-tabs="true">
+
+  <ion-nav-title>
+    <ion-header-bar class="">
+  	  <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+      <span class="ersi" style="width: 80%;color: #444;margin-top: -6px;">代理信息</span>
+       <i class="icon ion-ios-search-strong" style="font-size: 30px;float: right;margin-top: -5px;" ng-click="dlsousFn()"></i>
+    </ion-header-bar>
+  </ion-nav-title>
+ 		<!--<i class="icon ion-ios-search-strong" style="font-size: 28px;float: right;"></i>-->
+    
+  <ion-content  >
+  	<ion-refresher
+    pulling-text="下拉刷新..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+  	 <div class="tou-m1" ng-repeat="item in dailixData" >
+  	 	 <div class="daili-hang" style="">
+  	 	 	  <div class="lie" style="">
+  	 	  	   <span>推荐人</span>
+    		     <span style="float: right;">{{item.phone}}</span>
+  	 	    </div>
+  	 	    <div style="padding: 23px 13px;">
+	  	 	    	<p style="font-weight: bold;color:#4556ff;">
+		  	 	    		 <span>{{item.nikeName}}</span>
+		    		       <span style="float: right;">{{item.childPhone}}</span>
+	  	 	    	</p>
+	  	 	  	  <p>
+			  	 	    	<span>{{item.location}}</span>
+			    		    <span style="float: right;">{{item.inviteTime}}</span>
+	  	 	    	</p>
+	  	 	   	  <p>
+	  	 	    			无服务区域
+	  	 	      </p> 
+  	 	    </div> 
+  	 	 </div> 
+  	 </div>
+  	 <div class="xinzhen" style="margin-top: 30px;" ng-click="xinzendailFn()">
+  	 	 新增代理
+  	 </div>
+  	<!--上拉加载-->
+      <ion-infinite-scroll
+        icon="ion-loading-c"
+        ng-if="!moredata"
+        on-infinite="loadMore()"
+        immediate-check="false"
+        distance="10%">
+      </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

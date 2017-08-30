@@ -1,0 +1,48 @@
+<ion-view title="代理架构" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  	 	 <ion-scroll zooming="true" direction="xy" style="width: 500px; height: 625px">
+        <div id="dljg" style="width: 1245px;">
+        	<div style="height:3rem ;background:#ff9900 ;">
+        		 <table class="shiliu" border="" cellspacing="" cellpadding=""style="height: 100%;">
+			  	 			<tr style="color: white;">
+			  	 				<td class="t96" >代理账号</td>
+			  	 				<td class="t110" >俱乐部账号</td>
+			  	 				<td class="t68" >昵称</td>
+			  	 				<td class="t82" >代理数</td>
+			  	 				<td class="t180" >代理购卡总数/总金额</td>
+			  	 				<td class="t166" >个人买卡数量/金额</td>
+			  	 				<td class="t96" >上级代理</td>
+			  	 				<td class="t86" >等级</td>
+			  	 				<td class="t86" >级别</td>
+			  	 				<td class="t106">管理</td>
+			  	 			</tr>
+		  	 		</table> 	 
+        	</div>
+        	<div id="list">
+        		 <table class="shiliu" border="" cellspacing="" cellpadding=""style="height: 100%;">
+			  	 			<tr style="" ng-repeat="item in dljgData">
+			  	 				<td class="t96" >123456</td>
+			  	 				<td class="t110" >234567</td>
+			  	 				<td class="t68" >{{item.nikeName}}</td>
+			  	 				<td class="t82">{{item.sums}}</td>
+			  	 				<td class="t180">{{item.childAllsum}}/{{item.childAllmoney}}</td>
+			  	 				<td class="t166">{{item.selfAllsum}}/{{item.selfAllMoney}}</td>
+			  	 				<td class="t96">152***2222</td>
+			  	 				<td class="t86">{{item.agentLevel}}</td>
+			  	 				<td class="t86">代理</td>
+			  	 				<td class="t106" >
+			  	 					<button ng-disabled='{{item.canuse}}' class="button button-small " ng-click="kaiqiFn($index,$event)">开启</button>
+			  	 					<button ng-disabled='!{{item.canuse}}' class="button button-small" ng-click="jinzhiFn($index,$event)">禁止</button>
+			  	 				</td>
+			  	 			</tr>
+		  	 		</table> 	 
+        	</div>
+        		
+        </div>
+      </ion-scroll>	
+  </ion-content>
+</ion-view>

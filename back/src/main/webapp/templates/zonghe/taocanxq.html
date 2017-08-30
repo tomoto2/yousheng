@@ -1,0 +1,62 @@
+<ion-view title="套餐详情" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  	 <div class="tou-m">
+  	 	<!--<form id="payform" method="post"  action="/">-->
+  	 		<!--<input type="hidden" name="" id="tt" value="" />-->
+	  	 	<div style="background: white;padding: 15px;">
+	  	 		<div class="wo-hang-1 tao" >
+	    	         <span>套餐名称</span>
+	    		     <span style="float: right;">{{taocanData.pname}}</span>
+	            </div>
+	            <div class="wo-hang-1 tao" >
+	    	         <span>房卡数量</span>
+	    		     <span style="float: right;">{{taocanData.number}}</span>
+	            </div>
+	            <div class="wo-hang-1 tao" >
+	    	         <span>售价</span>
+	    		     <span style="float: right;">{{taocanData.money}}</span>
+	            </div>
+	            <div class="wo-hang-1 tao">
+	    	         <span>代理账号</span>
+	    		     <span style="float: right;">{{taocanData.agentPhone}}</span>
+	            </div>
+	            <div id="zhifu" style="margin-top: 160px;">
+		            	<p class="shiliu" style="color:#55555 ;margin: 15px 0px 30px;">
+		            		注：支付后充入后台账号，充入玩家账号请前往【玩家充值】
+		            	</p>
+			  		 	  <button ng-click="wxzhifuFn()" class="button button-full button-light" >
+		 				       	微信支付
+		            </button>
+		            <button ng-click="zfbzhifuFn()"  class="button button-full button-light" >
+		 					         支付宝支付
+		             </button>
+	            </div>
+	  	 	
+	  	 	</div>
+  	 	<!--</form>-->
+  	 </div>
+  	 <div id="forms">
+  	 	
+  	 </div>
+  	<div class="weixin-tip">
+  		<p ng-click="cxFn()" style="color: white;">X</p>
+			<!--<p>
+				<img src="http://47.92.115.31/back/templates/zonghe/live_weixin.png" alt="微信打开"/>
+			</p>-->
+			
+			<div id=" " style="padding:20px 25px;">
+  		  	 <h3>
+  		  	 	 1:请点击右上角，三个点
+  		  	 	 
+  		  	 </h3>
+  		  	 <h3>
+  		  	 	  2：选择在浏览器打开
+  		  	 </h3>
+  		  </div>
+	 </div>
+  </ion-content>
+</ion-view>

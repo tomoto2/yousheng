@@ -1,0 +1,41 @@
+  <div>
+	    	<nav class="" style="height: 60px;line-height: 60px;background-color: white;">
+				<div class="sous" style="position: relative;">
+					<i ng-click="jlbFn()" class="Hui-iconfont Hui-iconfont-search2" style=" "></i>
+					<input id="jlbinput" type="search" placeholder="搜索" value="" style="float: left;margin-left: 20px;" />	
+				</div>
+			</nav>
+			
+			<div class="daoh" style="margin-left: 0px;color: white;">
+				<div class="col1">俱乐部ID</div>
+				<div class="col2">代理ID</div>
+				<div class="col2">代理昵称</div>
+				<div class="col2">俱乐部人数</div>
+				<div class="col2">俱乐部成员</div>
+				<div class="col3">操作</div>
+			</div>
+			<div ng-repeat="item in julebuData" style="background: white;height: 44px;">
+					<div class="col1">{{item.numId}}</div>
+					<div class="col2">{{item.numId}}</div>
+					<div class="col2">{{item.owner}}</div>
+					<div class="col2">{{item.memberSum}}</div>
+					<div class="col2">
+						<button class="btn radius"  ng-click="chakanFn($index)" style="background:#2D4964;color: white;">查看成员</button>						
+					</div>
+					<div class="col3">
+						<button class="btn radius"  ng-click="jieshanFn($index)" style="background:#2D4964;color: white;">解散</button>						
+					</div>
+			</div>
+			<div class="page">
+				<ul class="pageMenu clearfix">
+					 <li id="jlbs" class="prevPage" ng-click="jlbsyyFn()"> < 上一页 </li>
+					 <div class="pageObj ">
+						
+					 </div>
+					 <li id="jlbx" class="nextPage" ng-click="jlbxyyFn()"> 下一页 > </li>
+					 <li class="last" style="font-size: 14px;">
+					  	共<span class="totalPage">{{count4}}</span>页
+					 </li>
+				 </ul>
+		  </div>
+</div>

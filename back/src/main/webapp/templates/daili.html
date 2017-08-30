@@ -1,0 +1,42 @@
+<ion-view title="旗下代理业绩" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+	  <div class="row qix-tab">
+		  <div class="col" ng-click="jinriFn()">今日业绩</div>
+		  <div class="col" ng-click="benyueFn()">本月业绩</div>
+		  <div class="col" ng-click="dailisFn()">旗下代理数</div>
+		  <div class="col" ng-click="fanlimxFn()">返利明细</div>
+		</div>
+		<div id="dl-1" style="" ng-repeat="item in tixiandlData">
+		 	<div class="row" style="margin-bottom: 20px;">
+		 		<div class="col" style="color: black;">
+		 			<span style="margin-right: 20px;">{{item.nickName}}</span>
+		 			<span>{{item.id}}</span>
+		 		</div>
+		 		<div class="col"style="color: #b1b1b1;text-align: right;">
+		 			   旗下人数  {{item.sum}}
+		 		</div>
+		 	</div>
+		 	<div  class="row p1" >
+    			<div class="col">本日/本月业绩</div>
+    			<div class="col" >本月返利</div>
+    			<div class="col" >返利阶梯</div>
+    	</div>
+    	<div  class="row p2" >
+    			<div class="col" >{{item.dayMoney}}/{{item.monthMoney}}</div>
+    			<div class="col" >{{item.benYueFanli}}</div>
+    			<div class="col" >{{item.monthFanlibi}}</div>
+    	</div>
+		</div>
+		<ion-infinite-scroll
+        icon="ion-loading-c"
+        ng-if="!moredata"
+        on-infinite="loadMore()"
+        immediate-check="false"
+        distance="10%">
+    </ion-infinite-scroll>
+  </ion-content>
+</ion-view>

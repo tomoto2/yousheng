@@ -1,0 +1,66 @@
+<ion-view title="购买房卡" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  	<div class="tou-m">
+  		 <div style="background:white;">
+	  		 	<div style="height:5rem ;border-bottom: 1px solid #d3d3d3;padding: 13px 25px;">
+	  		 		<p class="ersi" style="margin-bottom: 15px;">{{fangkaData.phone}}</p>
+	  		 		<p class="shiliu" style="color: red;">玩家ID：{{fangkaData.pid}}</p>
+	  		 	</div>
+	  		 	<div id="touc" class="shiba" style="padding: 15px 15px 0px 5px;">
+	  		 		<p>选套餐</p>
+	  		 		<div class="row taocan">
+	  		 			<div class="col button buton-outline button-stablet" ng-click="taocanxqFn(1)">
+	  		 				<p class="pp1">300元</p>
+	  		 				<p class="pp2">200张 1.5/张</p>
+	  		 			</div>
+	  		 			<div class="col button buton-outline button-stablet" ng-click="taocanxqFn(2)">
+	  		 				<p class="pp1">750元</p>
+	  		 				<p class="pp2">1000张 1.5/张</p>
+	  		 			</div>
+	  		 		  <div class="col button buton-outline button-stablet" ng-click="taocanxqFn(3)">
+	  		 				<p class="pp1">1475元</p>
+	  		 				<p class="pp2">1000张 1.45/张</p>
+	  		 			</div>
+	  		 		</div>
+	  		 		<div class="row taocan">
+	  		 			<div class="col button buton-outline button-stablet" ng-click="taocanxqFn(4)">
+	  		 				<p class="pp1">2800元</p>
+	  		 				<p class="pp2">2000张 1.4/张</p>
+	  		 			</div>
+	  		 			<div class="col button buton-outline button-stablet" ng-click="taocanxqFn(5)">
+	  		 				<p class="pp1">6750元</p>
+	  		 				<p class="pp2">5000张 1.35/张</p>
+	  		 			</div>
+	  		 			<div class="col button buton-outline button-stablet" ng-click="taocanxqFn(6)">
+	  		 				<p class="pp1">13000元</p>
+	  		 				<p class="pp2">10000张 1.3/张</p>
+	  		 			</div>
+	  		 			
+	  		 		</div>
+	  		 		<div style="margin-top: 10px;padding: 15px;">
+	  		 			<p>自定义套餐</p>
+	  		 			<div id="zdyi" class="button buton-outline button-stablet" ng-click="dinyiTaocFn()">
+	  		 				<p class="pp1">自定义套餐</p>
+	  		 				<p class="pp2">购卡数量大于200张 </p>
+	  		 			</div>
+	  		 			<div id="isXian" style="margin-top: 75px;display: none;">
+	  		 				<p>自定义套餐数量</p>
+	  		 				<input id="zdyl" type="text" />
+	  		 				<p class="shiliu" style="color:#55555 ;margin: 15px 0px 30px;">提示：购卡数量大于等于最小套餐量</p>
+	  		 			 <button ng-click="taocanxqFn(7)" class="button button-full buton-outline button-stablet" >
+ 										确定
+               </button>
+	  		 			</div>
+	  		 			
+	  		 		</div>
+	  		 	</div>
+  		 </div>
+  	</div>
+  	 
+  	
+  </ion-content>
+</ion-view>

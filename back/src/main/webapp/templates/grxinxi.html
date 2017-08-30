@@ -1,0 +1,63 @@
+<ion-view title="个人信息修改" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  <ion-refresher
+    pulling-text="下拉刷新..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+  	<div style="background:#f2f2f2 ;padding-top: 10px;">
+  		 <div class="wo-hang" style=""> 
+            <div class="wo-hang-1" ng-click="xinxGaiFn()"  style="border-bottom: 1px solid #ccc;">
+    	        <span>昵称</span>
+    		    <span style="float: right;">
+    		       <i style="margin-left: 10px ;" class="icon ion-ios-arrow-right" ng-click="gainicFn()"></i>
+    		    </span>
+    		    <span style="float: right;">{{nicen}}</span>
+            </div>
+            <div class="wo-hang-1"  style="clear: both;">
+    	        <span>账号类型</span>
+    		    <!--<span style="float: right;">
+    		        <i class="icon ion-ios-arrow-right"></i>
+    		    </span>-->
+    		    <span style="float: right;">代理</span>
+            </div>
+         </div> 
+         <div class="wo-hang" style="margin-top: 10px;clear: both;"> 
+            <div class="wo-hang-1" ng-click="xinxGaiFn()"  style="border-bottom: 1px solid #ccc;">
+    	        <span>登陆账号</span>
+	    		    <!--<span style="float: right;">
+	    		        <i class="icon ion-ios-arrow-right"></i>
+	    		    </span>-->
+	    		    <span style="float: right;">{{gerenxxData.phone}}</span>
+            </div>
+            <div class="wo-hang-1"  style="clear: both;">
+    	        <span>微信账号</span>
+    		    <span style="float: right;">
+    		        <i ng-click="gaiwxhFn()" class="icon ion-ios-arrow-right"></i>
+    		    </span>
+    		    <span style="float: right;">{{wxhao}}</span>
+            </div>
+         </div> 
+         <div class="wo-hang" style="margin-top: 10px;clear: both;"> 
+            <div class="wo-hang-1" ng-click="xinxGaiFn()"  style="border-bottom: 1px solid #ccc;">
+    	        <span>身份证号</span>
+    		    <span style="float: right;">
+    		        <i class="icon ion-ios-arrow-right" ng-click="shenfzFn()"></i>
+    		    </span>
+    		    <span class="shiliu" style="float: right;">{{sfz}}</span>
+            </div>
+            <div class="wo-hang-1"  style="clear: both;">
+    	        <span>加入时间</span>
+    		    <span style="float: right;">{{gerenxxData.inviteTime}}</span> 
+    		    <!--<span style="float: right;">
+    		        <i class="icon ion-ios-arrow-right"></i>
+    		    </span>-->
+            </div>
+         </div> 
+  	</div>	    
+  	
+  </ion-content>
+</ion-view>

@@ -1,0 +1,31 @@
+<ion-view title="代理信息"  hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+  </ion-nav-buttons>
+
+  <ion-content >
+  	 <div class="tou-m1 shiba" style="">
+  	 	<p style="margin-top: 15px;">请输入手机号</p>
+  	 	<input id="sjhao" class="xinzinput" type="text" />
+  	 	<p style="margin-top: 15px;">昵称</p>
+  	 	<input id="nic" class="xinzinput" type="text" />
+  	 	<p style="margin-top: 15px;">验证码</p>
+  	 	<div style="height: 4rem;">
+	  	 	<input id="yzma" style="float: left;height: 42px;width: 60%;" class="" type="text" />
+	  	 	<!--<button ng-click="fayanzmaFn()" class="button button-outline shiliu"style="float: right;width: 40%;border-radius: 6px; background: #ff9900;color: white;">
+				  发送验证码
+				</button>-->
+					<input type="button" ng-click="fayanzmaFn()" class="shisi"  value="获取验证码" style="width: 39%;float: right;height: 42px;padding: 0px;" />
+  	 	</div>
+  	 	<p style="margin-top: 15px;clear: both;">密码</p>
+  	 	<input id="dlmima" class="xinzinput" type="text" />
+  	 	<div id="" style="margin-top:100px ;">
+  	 		<button ng-click="xinzenFn()" class="button button-full button-light" style="border: 1px solid #8e8e8e;border-radius:39px;" >
+	 			  新增代理
+	      </button>
+  	 	</div>
+  	 	
+  	 </div>
+  	
+  </ion-content>
+</ion-view>

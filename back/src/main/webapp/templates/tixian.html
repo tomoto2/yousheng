@@ -1,0 +1,87 @@
+
+<ion-view title="提现" hide-tabs="true">
+	<ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  	<ion-refresher
+    pulling-text="下拉刷新..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+  	<div style="padding: 0px 15px ;">
+  		<div id="tx-tou" >
+    	  <span id=""style="float: left;">
+    	  	 余额
+    	  </span>
+    	  <span id="" style="float: right;">
+    	  	 ￥{{yuee}}
+    	  </span>
+        </div>
+        <div style="height: 4rem;background:#f2f2f2 ;border-radius: 2px;line-height: 4rem;">
+        	<input  type="text" name="" id="txjine" value="{{yuee}}" style="text-align: right;width: 97%;"/> 
+        </div>
+        <div class="shiliu" style="height: 4rem; color: #b1b1b1;line-height: 4rem;">
+        	<p>注: 每月30日可提取上月收入，低于300元无法提现</p>
+        </div>
+  	</div>
+  	<div class="shiliu" style="height: 4rem;line-height: 4rem;padding: 0px 20px; border-bottom: 1px solid #ccc;border-top: 1px solid #ccc;">
+        <div style="float: left;color: black;"> 选择支付方式</div>
+        <div style="float: right;"><i class="icon ion-ios-arrow-down" ng-click="zifufangsFn()"></i></div>
+        
+    </div>
+    <div id="fangs" style="padding: 0px 15px ;margin: 13px 0px;display: none;">
+    	<div style="height: 7rem;color: #b1b1b1;background: #f2f2f2;border-radius: 23px;">
+    		<ion-list>
+			  <ion-radio ng-click="wxFn()" class="shiliu" ng-model="choice" ng-value="'A'">
+			  	<img src="{{img}}" alt="" />
+    			<span>微信</span>
+			  </ion-radio>
+			  <ion-radio ng-click="zfbFn()" class="shiliu" ng-model="choice" ng-value="'B'">
+			  	<img src="{{img1}}" alt="" />
+    			<span>支付宝</span>
+			  </ion-radio>
+			</ion-list>
+    	</div>
+    	<div id="wx" class="shiliu" style="display: none; clear: both; height: 4rem;line-height: 4rem;padding: 0px 20px; border-bottom: 1px solid #ccc;border-top: 1px solid #ccc;">
+	       <div style="float: left;color: black;"> 微信号</div>
+	        <div style="float: right;;color: #b1b1b1;">
+	         	 <span style="margin-right: 10px;color: #444;" >{{wxh}}</span>
+	        	 <i  class="icon ion-compose" ng-click="gaiwxhFn(1)"></i>
+	        </div>
+	    </div>
+	    <div id="zfb" class="shiliu" style="display: none; clear: both; height: 6rem;line-height: 2.5rem;padding: 0px 20px; border-bottom: 1px solid #ccc;border-top: 1px solid #ccc;">
+	        <div style="clear: both;">
+	        	<div style="float: left;color: black;"> 支付宝号</div>
+		        <div style="float: right;;color: #b1b1b1;">
+		        	 <span style="margin-right: 10px;color: #444;" >{{zfb}}</span>
+		        	 <i  class="icon ion-compose" ng-click="gaiwxhFn(2)"></i>
+		        </div>
+	        </div>
+	        <div style="clear: both;">
+	        	<div style="float: left;color: black;">真实姓名</div>
+		        <div style="float: right;;color: #b1b1b1;">
+		        	 <span style="margin-right: 10px;color: #444;" >{{name}}</span>
+		        	 <i  class="icon ion-compose" ng-click="gaiwxhFn(3)"></i>
+		        </div>
+	        </div>     
+	    </div>
+	    
+    </div>
+    
+    <div style="height: 4rem;"></div>
+    <div class="shiliu" style="height: 4rem;color: #b1b1b1;text-align: center;padding: 15px 20px;">
+    	注: 添加官网微信123，提交申请后，后台会与你取得联系，请注意查收
+    </div>
+     <div style="padding: 0px 15px ;margin-top: 10px;">
+     	<div class="shiba" ng-click="tixianFn()" style="height: 4rem;border: 1px solid #ccc;border-radius:2rem;text-align: center;line-height: 4rem;color: #b1b1b1;">
+     		提现
+     	</div>
+     	<div ng-click="lisiFn()" class="shiliu" style="height: 4rem;text-align: center;line-height: 4rem;color: #ff7733;">
+     		历史提现记录
+     	</div>
+     </div>
+    
+  </ion-content>
+</ion-view>
+

@@ -1,0 +1,54 @@
+  <div>
+	    	<nav class="" style="height: 60px;line-height: 60px;background-color: white;">
+				<span ng-click="goBackFn()" style="float: left;margin-left: 20px;font-size: 18px;">返回</span>
+				<div class="sous" style="position: relative;">
+					<i ng-click="cyFn()" class="Hui-iconfont Hui-iconfont-search2" style=" "></i>
+					<input id="cyinput" type="search" placeholder="搜索" value="" style="float: left;margin-left: 20px;" />	
+				</div>
+			</nav>
+			
+			<div class="daoh" style="margin-left: 0px;color: white;">
+				<!--<div class="col120">成员编号</div>-->
+				<div class="col340">成员ID</div>
+				<div class="col340">成员昵称</div>
+				<div class="col340">当前剩余房卡</div>
+				<div class="col340">操作</div>
+			</div>
+			<div>
+				<div ng-repeat="item in chengyuanData" style="background: white;height: 44px;">
+					  <!--<div class="col120"></div>-->
+				    <div class="col340">{{item.uid}}</div>
+				    <div class="col340">{{item.nikeName}}</div>
+				    <div class="col340">{{item.card}}</div>
+					<div class="col340">
+						<button class="btn radius"  ng-click="chakanFn($index)" style="background:#2D4964;color: white;">添加房卡</button>						
+		
+						<button class="btn radius"  ng-click="yicuFn($index)" style="background:#2D4964;color: white;">移除</button>						
+					</div>
+				</div>
+		</div>
+		<div class="page">
+				<ul class="pageMenu clearfix">
+					 <li id="cys" class="prevPage" ng-click="cysyyFn()"> < 上一页 </li>
+					 <div class="pageObj ">
+						
+					 </div>
+					 <li id="cyx" class="nextPage" ng-click="cyxyyFn()"> 下一页 > </li>
+					 <li class="last" style="font-size: 14px;">
+					  	共<span class="totalPage">{{count5}}</span>页
+					 </li>
+				</ul>
+		</div>
+</div>
+<div id="modal-demo1" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content radius">
+			<div class="modal-header" style="background: #2D4964;height: 19px;">
+				<h3 class="modal-title" style="text-align: center;color: white;padding: 0px;">添加房卡</h3>
+				<a class="close" style="color: white;" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
+			</div>
+			<div class="modal-body1" style="text-align: center;">
+			</div>
+		</div>
+	</div>
+</div>

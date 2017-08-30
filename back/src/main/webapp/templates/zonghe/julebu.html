@@ -1,0 +1,55 @@
+<ion-view title="俱乐部" hide-tabs="true">
+  <ion-nav-buttons>
+    <button class="button button-icon ion ion-android-arrow-back" ng-click="goBackFn()"></button>
+
+  </ion-nav-buttons>
+  <ion-content >
+  	<ion-refresher
+    pulling-text="下拉刷新..."
+    on-refresh="doRefresh()">
+  </ion-refresher>
+  	<div id="jlb-1" style="">
+  		 <div style="background: white;padding: 25px 21px;">
+  		 	 <div style="height: 2rem;">
+  		 	 	   <span>俱乐部名称:{{julebuxx.name}}</span>
+  		 	 	   <button class="button button-small shiliu" ng-click="congzjiluFn()" style=" margin-top: -5px; float: right;background:#afafaf ;">
+						      充值记录
+						 </button>
+  		 	 </div>
+  		 	 <div>
+  		 	 	<p>俱乐部ID:{{julebuxx.cid}}</p>
+  		 	 	<p>剩余房卡:{{julebuxx.croomSum}}</p>
+  		 	 	<p>俱乐部人数:{{julebuxx.now}}/{{julebuxx.max}}</p>
+  		 	 </div>
+  		 </div>
+  		 <div style="padding: 10px ;" class="inputs">
+		  	   <input id="jlbinput" type="search" placeholder="" style="padding-left: 24px; background: #afafaf; width: 91%;border-radius:20px;" >
+		  	   <i class="icon icons ion-ios-search-strong" style="float: right;" ng-click="jlbsousuoFn()"></i>
+	  	    
+  		 </div>
+  	</div>
+  	<div id="jlb-2" style="background: white;">
+  		<div class="row zong" style="background:#ff9900 ;padding-top: 10px; color: white;height: 3rem;">
+  			<div class="col">玩家ID</div>
+  			<div class="col">昵称</div>
+  			<div class="col">房卡</div>
+  			<div class="col">备注</div>
+  			<div class="col">管理</div>
+  			<div class="col">充值</div>
+  			 
+  		</div>
+  		<div id="d1" class="row zong" ng-repeat="item in julebuzixx" style="padding-top: 10px; height: 3rem;margin-top: 10px;">
+  			<div class="col">{{item.uid}}</div>
+  			<div class="col">{{item.nikeName}}</div>
+  			<div class="col">{{item.card}}</div>
+  			<div class="col" style="background: #afafaf;" ng-click="qunzhuFn($index)">群主</div>
+  			<div class="col" style="background: #f2f2f2;" ng-click="guanliFn($index)">管理</div>
+  			<div class="col" style="background: #CCCCCC;" ng-click="chongzhiFn($index)">充值</div>
+  			 
+  		</div>
+  	
+  		
+  	</div>
+  	
+  </ion-content>
+</ion-view>

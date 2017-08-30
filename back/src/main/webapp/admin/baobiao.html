@@ -1,0 +1,29 @@
+  <div>
+	  <nav class="" style="height: 60px;line-height: 60px;background-color: white;">
+				<div class="sous">
+					<i ng-click="baobiaoFn()" class="Hui-iconfont Hui-iconfont-search2" style=" "></i>
+					<input placeholder="请选择日期" id="demo1"  />	
+				  <span id="gang">
+				  	-
+				  </span>
+				  <input placeholder="请选择日期" id="demo" />	
+				</div>
+			</nav>
+			
+			<div class="daoh" style="margin-left: 0px;color: white;height: 44px;">
+				<div class="col223">新增代理数</div>
+				<div class="col223">新注册玩家数</div>
+				<div class="col223">售卡总额</div>
+				<div class="col223">售卡数量</div>
+				<div class="col223">当月售卡金额</div>
+				<div class="col245">当月售卡数量</div>
+			</div>
+			<div style="background: white;height:44px;">
+						<div class="col223">{{baobiaoData.proxySum}}</div>
+						<div class="col223">{{baobiaoData.userSum}}</div>
+						<div class="col223">{{baobiaoData.allMoney}}</div>
+						<div class="col223">{{baobiaoData.allSum}}</div>
+						<div class="col223"></div>
+						<div class="col245"></div>
+			</div>
+</div>
