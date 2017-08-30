@@ -33,8 +33,7 @@ public class UserResource extends BaseResource{
 	private UserInfoService userInfoService;
 	@Context
 	HttpServletRequest request;
-
-
+	
 	//玩家自己购买方法
 	@POST
 	@Path("userPay")
