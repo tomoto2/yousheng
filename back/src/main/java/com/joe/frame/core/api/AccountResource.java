@@ -235,7 +235,7 @@ public class AccountResource extends BaseResource {
 				//int failureTime = getFailureTime();
 				//				cacheServiceProxy.put(token, account);
 				//				ehcacheService.put(token, account,600*60);//不过期
-				logger.info("登录，将用户信息存到缓存，永不过时，除非退出登录，清空缓存,token={}",token);
+				logger.info("登录，将用户信息存到缓存，永不过时，除非退出登录才清空缓存,token={}",token);
 				redisCacheService.put(token, account);
 			}
 			dto.setData(token);

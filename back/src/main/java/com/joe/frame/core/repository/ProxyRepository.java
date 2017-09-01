@@ -346,7 +346,7 @@ public class ProxyRepository extends AbstractRepository<Proxy, String> {
 	 * @return
 	 */
 	public List<Proxy> getAllProxy(int size,int pageNo) {
-		return selectFrom().orderBy(e.inviteTime.asc()).offset((pageNo - 1) * size).limit(size).fetch();
+		return selectFrom().orderBy(e.inviteTime.desc()).offset((pageNo - 1) * size).limit(size).fetch();
 	}
 
 

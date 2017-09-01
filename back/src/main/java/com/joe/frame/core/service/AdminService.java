@@ -346,6 +346,10 @@ public class AdminService {
 				if(cashOut!= null && cashOut.getStatus()!= null){
 					dto.setStatus(cashOut.getStatus());
 					dto.setCashOutId(cashOut.getId());
+					if(cashOut.getDealWith()!= null){
+						dto.setDealWith(cashOut.getDealWith());
+						logger.info("设置处理状态{}为",cashOut.getDealWith(),dto.getDealWith());
+					}
 				}
 				dto.setName(realname);
 				dto.setAlipay(alicode);

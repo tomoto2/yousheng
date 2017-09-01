@@ -22,7 +22,7 @@ import com.joe.frame.core.service.ShareService;
 public class MonthTask {
 	private static final Logger logger = LoggerFactory.getLogger(MonthTask.class);
 	@Autowired
-	private static DateUtil dateUtil;
+	private DateUtil dateUtil;
 	@Autowired
 	private ShareService shareService;
 	private static ReentrantLock lock = new ReentrantLock();
@@ -39,21 +39,21 @@ public class MonthTask {
 	//	@Scheduled(cron = "0 0 1 1 * ?")// 每月1号凌晨1点执行一次：
 	//	@Scheduled(fixedDelay=800 * 1000)
 	
-	@Scheduled(cron = "0 15 6 1 * ?")// 每月1日上午6:15触发
+//	@Scheduled(cron = "0 10 6 1 * ?")// 每月1日上午6:10触发
+	@Scheduled(cron = "0 50 11 1 * ?")// 每月1日上午6:15触发
 	public void cacl() throws ParseException{
 		lock.lock();
-		//		String now = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
-		String now = dateUtil.getPreMonth(dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd HH:mm:ss");//本月1号执行上月分红
-		logger.info("开始计算{}的分红",now);
+		logger.info("开始计算分红");
+		String now = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
+		String pre = dateUtil.getPreMonth(now, "yyyy-MM-dd HH:mm:ss");//本月1号执行上月分红
+		logger.info("开始计算{}的分红",pre);
 		try {
-			shareService.getShare(now);
+			shareService.getShare(pre);
 		} catch (java.text.ParseException e) {
-			logger.info("每月分红计算失败",e);
+			logger.error("每月分红计算失败",e);
 		}
-		logger.info("计算技术{}的分红",now);
+		logger.info("计算{}的分红结束",pre);
 		lock.unlock();
 	}
-
-
 
 }
