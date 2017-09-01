@@ -21,8 +21,7 @@
 			lastNum   : 0,
 			cacheNum  : 1,
 			min       : 0,
-			res       :null,
-			dat  	  :null
+			res       :null
 		};
 		var opts = $.extend({},defaults,options);
 
@@ -46,7 +45,6 @@
 			        success:function(data){
 				    if(data.status == 0){
 				    	opts.res = data.data;
-				    	opts.dat=data;
 				    	if((opts.res.length <= opts.displayCount)&&(opts.res.length > 0)){
 							opts.displayCount = opts.res.length;
 	                        opts.lastPage.addClass("disabled");
@@ -71,7 +69,7 @@
 
 				    	opts.notContent.addClass("hide");
                 		for (var i = 0; i < opts.displayCount; i++) {
-                            opts.pageDiv.append(opts.dataFun(opts.res[i],opts.dat));
+                            opts.pageDiv.append(opts.dataFun(opts.res[i],i));
                         }
 
                         for (var i = 0; i < opts.pNum; i++) {
@@ -300,7 +298,7 @@
 			},
 			xhhtml : function(index,count){
 				for (var i = ((index-1)*opts.displayCount); i < count; i++) {
-                    opts.pageDiv.append(opts.dataFun(opts.res[i],opts.dat));
+                    opts.pageDiv.append(opts.dataFun(opts.res[i],i));
                 }
                 opts.keuInput.val(index);
 			},

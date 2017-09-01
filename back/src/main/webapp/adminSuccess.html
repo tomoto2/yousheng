@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>登录</title>
+
+<link rel="stylesheet" href="src/bootstrap.min.css">
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<style type="text/css">
+</style>
+</head>
+<body >
+	<!--登录界面-->
+	<div id="loginContent"></div>
+</body>
+<script type="text/javascript">
+$(function (){
+$.ajax({
+    url:"http://localhost:80/ws/admin/getAdminInfo",
+    type:"GET",
+    success:function(res){
+    	if(res.status==0){
+    		console.log(res);
+    		alert(0);
+    	}else{
+    		alert(res.errorMessage)
+    	}
+    },
+    error:function(res){
+        console.log(res+"失败!");
+    }
+})
+});
+    
+</script>
+</html>

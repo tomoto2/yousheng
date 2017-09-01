@@ -16,8 +16,8 @@
 				<div class="col160">下级代理购卡总数</div>
 				<div class="col160">下级代理购卡总金额</div>
 				<div class="col1">上级代理</div>
-				<div class="col80">代理等级</div>
-				<div class="col130">操作</div>
+				<div class="col100">代理等级</div>
+				<div class="col100">操作</div>
 			</div>
 			<div ng-repeat="item in jiagouData" style="background: white;height: 44px;">
 					<div class="col1">{{item.inviteCode}}</div>
@@ -29,11 +29,10 @@
 					<div class="col160">{{item.childBuySum}}</div>
 					<div class="col160">{{item.childMoneySum}}</div>
 					<div class="col1">{{item.parentPhone}}</div>
-					<div class="col80">{{item.level}}</div>
-					<div class="col130">
-						<button ng-disabled='{{item.canuse}}' ng-click="qiyFn($index,$event)" ng-class="{true:'wuxiao',false:'kedian'}[item.canuse]" class="btn radius" style="padding: 0px;width: 40px; font-size: 8px;">启用</button>
-						<button ng-disabled='!{{item.canuse}}' ng-click="jinyFn($index,$event)" ng-class="{true:'kedian',false:'wuxiao'}[item.canuse]" class="btn radius" style="padding: 0px;width: 40px; font-size: 8px;">禁用</button>
-					  <button ng-click="guanliFn($index,$event)"  class="btn radius" style=" padding: 0px;width: 40px; font-size: 8px;background: #2D4964;color: white;">管理</button>
+					<div class="col100">{{item.level}}</div>
+					<div class="col100">
+						<button ng-disabled='{{item.canuse}}' ng-click="qiyFn($index,$event)" ng-class="{true:'wuxiao',false:'kedian'}[item.canuse]" class="btn radius" style="width: 44px;padding: 0px; font-size: 10px;">启用</button>
+						<button ng-disabled='!{{item.canuse}}' ng-click="jinyFn($index,$event)" ng-class="{true:'kedian',false:'wuxiao'}[item.canuse]" class="btn radius" style="width: 44px;padding: 0px; font-size: 10px;">禁用</button>
 					</div>
 			</div>
 			<div class="page">
@@ -48,16 +47,4 @@
 					 </li>
 				 </ul>
 		</div>	
-</div>
-<div id="modal-demos" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content radius">
-			<div class="modal-header" style="background: #2D4964;height: 19px;">
-				<h3 class="modal-title" style="text-align: center;color: white;padding: 0px;">修改上级代理</h3>
-				<a class="close" style="color: white;" data-dismiss="modal" aria-hidden="true" href="javascript:void();">×</a>
-			</div>
-			<div class="modal-bodys" style="text-align: center;margin-top: 25px;">
-			</div>
-		</div>
-	</div>
 </div>

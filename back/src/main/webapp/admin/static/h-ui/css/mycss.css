@@ -8,11 +8,6 @@
 	height: 60px;
 	line-height: 60px;
 	text-align: center;
-	font-size: 16px;
-}
-.xzcol input{
-	height: 37px;
-    width: 70%
 }
  .col1{
   	width: 120px;
@@ -52,13 +47,6 @@
   }
    .col110{
   	width: 110px;
-  	line-height: 44px;
-  	float: left;
-  	text-align: center;
-  	height: 44px;
-  }
-   .col130{
-  	width: 130px;
   	line-height: 44px;
   	float: left;
   	text-align: center;
@@ -174,29 +162,6 @@
  	width: 110px;
  	
  }
- 
-  .modal-bodys p{
-  	text-align: center;
-  	font-size: 16px;
-  	color:rgba(45, 73, 100, 1);
-  }
- .modal-bodys input{
- 	height: 30px;
- 	width: 200px;
- 	margin: 15px 0px;
- 	border: 1px solid #2D4964;
- }
- .modal-bodys button{
- 	margin-top: 10px;
- 	height: 33px;
- 	width: 200px;
- 	color: white;
- 	background:#2D4964 ;
- 	/*border: 1px solid #2D4964;*/
- }
-
- 
- 
  .kedian{
  	background: #2D4964;
  	color: white;

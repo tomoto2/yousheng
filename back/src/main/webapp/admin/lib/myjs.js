@@ -47,16 +47,6 @@ app.config(function ($stateProvider, $urlRouterProvider) {
            }
             
         })
-        .state("tab.xz", {
-            url:"/xinzeng",
-            views:{
-            'xz':{
-               templateUrl: "xinzengdl.html",
-               controller:"xinzengCtrl"
-               }
-           }
-            
-        })
          .state("tab.jg", {
             url:"/jiagou",
             views:{
@@ -110,21 +100,21 @@ app.config(function ($stateProvider, $urlRouterProvider) {
         ;
 });
 app.controller("mycontroller",function($scope,$http){
-var urls='http://47.92.115.31/back/ws/admin/getAdminInfo'	;
-$.ajax({
-		url:urls,
-		xhrFields: {
-           withCredentials: true
-       },
-       crossDomain: true,
-		type:"GET",
-		success:function(res){
-		    console.log(res);
-		},
-		error:function(res){
-		    console.log(res)
-		}
-   });
+//var urls='http://192.168.0.113:80/ws/admin/getAdminInfo'	;
+//$.ajax({
+//		url:urls,
+//		xhrFields: {
+//         withCredentials: true
+//     },
+//     crossDomain: true,
+//		type:"GET",
+//		success:function(res){
+//		    console.log(res);
+//		},
+//		error:function(res){
+//		    console.log(res)
+//		}
+// });
  $scope.tuichuFn=function(){
  	window.location.href='denglu.html';
  }

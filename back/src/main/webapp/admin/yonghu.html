@@ -24,8 +24,8 @@
 					<div class="col2">{{item.clubName}}</div>
 					<div class="col3" style="">
 						<button class="btn radius"  ng-click="fjfkFn($index)" style="background:#2D4964;color: white;">添加房卡</button>
-						<button ng-disabled='!{{item.remove}}' ng-click="kaiqiFn($index,$event)" ng-class="{true:'kedian',false:'wuxiao'}[item.remove]" class="btn radius" style="margin-left: 20px;">启用</button>
-						<button ng-disabled='{{item.remove}}' ng-click="jinzhiFn($index,$event)" ng-class="{true:'wuxiao',false:'kedian'}[item.remove]" class="btn radius" style="">禁用</button>					
+						<button ng-disabled='{{item.canUse}}' ng-click="kaiqiFn($index,$event)" ng-class="{true:'wuxiao',false:'kedian'}[item.canUse]" class="btn radius" style="margin-left: 20px;">启用</button>
+						<button ng-disabled='!{{item.canUse}}' ng-click="jinzhiFn($index,$event)" ng-class="{true:'kedian',false:'wuxiao'}[item.canUse]" class="btn radius" style="">禁用</button>					
 					</div>
 			 </div>	
 		</div>

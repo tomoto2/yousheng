@@ -39,8 +39,7 @@ public class MonthTask {
 	//	@Scheduled(cron = "0 0 1 1 * ?")// 每月1号凌晨1点执行一次：
 	//	@Scheduled(fixedDelay=800 * 1000)
 	
-//	@Scheduled(cron = "0 10 6 1 * ?")// 每月1日上午6:10触发
-	@Scheduled(cron = "0 45 15 1 * ?")// 每月1日上午6:15触发
+	@Scheduled(cron = "0 10 6 1 * ?")// 每月1日上午6:10触发
 	public void cacl() throws ParseException{
 		lock.lock();
 		logger.info("开始计算分红");

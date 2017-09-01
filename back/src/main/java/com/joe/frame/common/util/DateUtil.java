@@ -259,6 +259,7 @@ public class DateUtil {
 		if (time == null) {
 			return false;
 		}
+
 		return isToday(time.getTime());
 	}
 

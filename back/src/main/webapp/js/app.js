@@ -63,15 +63,6 @@ app.config(function($stateProvider, $urlRouterProvider,$ionicConfigProvider) {
       }
     }
   })
-  .state('tab.flbjs', {
-      url: '/dash/flbjs',
-      views: {
-        'tab-dash': {
-          templateUrl: 'templates/flbjs.html',
-          controller: 'flbjsCtrl'
-        }
-      }
-    })
   .state('tab.tixian', {
       url: '/dash/tixian:qian/:index',
       views: {
