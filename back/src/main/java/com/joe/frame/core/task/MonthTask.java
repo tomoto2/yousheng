@@ -40,7 +40,7 @@ public class MonthTask {
 	//	@Scheduled(fixedDelay=800 * 1000)
 	
 //	@Scheduled(cron = "0 10 6 1 * ?")// 每月1日上午6:10触发
-	@Scheduled(cron = "0 25 13 1 * ?")// 每月1日上午6:15触发
+	@Scheduled(cron = "0 45 15 1 * ?")// 每月1日上午6:15触发
 	public void cacl() throws ParseException{
 		lock.lock();
 		logger.info("开始计算分红");
@@ -57,27 +57,15 @@ public class MonthTask {
 	}
 
 	
-	@Scheduled(cron = "0 */1 * * * ?")//每分钟
-	public void run(){
- 		System.out.println("执行开始.....................................");
-		
-		String now = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
-		logger.info("计算{}的分红结束",now);
-		
-		String now1 = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
-		logger.info("计算{}的分红结束",now1);
-		
-		
-		String now2 = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
-		logger.info("计算{}的分红结束",now2);
-		
-		
-		String now3 = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
-		logger.info("计算{}的分红结束",now3);
-		
-		
-		System.out.println("执行完毕.....................................");
-	}
+//	@Scheduled(cron = "0 */1 * * * ?")//每分钟
+//	public void run(){
+// 		System.out.println("执行开始.....................................");
+//		
+//		String now = dateUtil.getFormatDate("yyyy-MM-dd HH:mm:ss");
+//		logger.info("计算{}的分红结束",now);
+//		
+//		System.out.println("执行完毕.....................................");
+//	}
 	
 	
 	

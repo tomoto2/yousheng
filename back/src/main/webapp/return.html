@@ -69,7 +69,7 @@
 		//var pp = "a3ae72aba5a348cf9adbef0390bd1549";
 		// 收到支付宝同步步回调形式参数http://mingmen.youshengtec.net/back/return_url.jsp?total_amount=0.01&timestamp=2017-08-05+10%3A05%3A22&sign=Hn9KGazHgw3n4j1caP0iAgz98%2BaRXM0b3y4MyVePy8xafwujhhRWQxW%2FmkI%2Bu0VJvaO5y89ZD%2Bsi0cNnLlR5UvvcOfLBowQ8CoLNUUI%2FCp5sic%2BkoT5ZKtpHfdgTTSBp1AdloBMqqd2yVFF2CafCvIzO3rXt5cEpBaWNS3yYEShF5POZ78ZAhRvx3fizYDnAHAz0zOvHGY6Fcl%2Fq7XGHrIFgF5l%2Fx7pzkqgjTv2trHn6LxsC1fFaLtf1ymLPfgCng9SKbEsryMBOnh0gcqu%2BZ8hoge%2FEANczPxXfhRuIunBhyG44Fv8rf%2BWg%2F7Z4anpXgnjEo7uD3YDcJmlj3MLv%2FQ%3D%3D&trade_no=2017080521001004190230500491&sign_type=RSA2&auth_app_id=2017072807929109&charset=UTF8&seller_id=2088721427511147&method=alipay.trade.wap.pay.return&app_id=2017072807929109&out_trade_no=a3ae72aba5a348cf9adbef0390bd1549&version=1.0
 		$.ajax({
-			url : "http://localhost/ws/pay/ali/justStatus",
+			url : "http://47.92.115.31/back/ws/pay/ali/justStatus",
 			type : "POST",
 			contentType : "application/json",
 			data : index2,
@@ -96,7 +96,7 @@
 		//点击确定跳转到充值列表页面
 		$(".que").click(function() {
 		  	$.ajax({
-				url:'http://localhost/ws/account/getuserToken',
+				url:'http://47.92.115.31/back/ws/account/getuserToken',
 				type:"POST",
 				data:index2,
 				contentType:"application/json",

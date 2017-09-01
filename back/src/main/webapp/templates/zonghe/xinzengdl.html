@@ -4,28 +4,50 @@
   </ion-nav-buttons>
 
   <ion-content >
+  	<form class="form-horizontal" name="myForm">
   	 <div class="tou-m1 shiba" style="">
   	 	<p style="margin-top: 15px;">请输入手机号</p>
   	 	<input id="sjhao" class="xinzinput" type="text" />
   	 	<p style="margin-top: 15px;">昵称</p>
-  	 	<input id="nic" class="xinzinput" type="text" />
+  	 	<input type="text" class="xinzinput" name="nicen" id="nicen" ng-model="nicen" ng-maxlength="5" required/>
+				<p>
+            <span style="color: red" ng-show="myForm.nicen.$invalid">
+              <span ng-show="myForm.nicen.$error.maxlength">*昵称长度不能超过五个字符</span>
+            </span>
+        </p>
   	 	<p style="margin-top: 15px;">验证码</p>
   	 	<div style="height: 4rem;">
 	  	 	<input id="yzma" style="float: left;height: 42px;width: 60%;" class="" type="text" />
 	  	 	<!--<button ng-click="fayanzmaFn()" class="button button-outline shiliu"style="float: right;width: 40%;border-radius: 6px; background: #ff9900;color: white;">
 				  发送验证码
 				</button>-->
-					<input type="button" ng-click="fayanzmaFn()" class="shisi"  value="获取验证码" style="width: 39%;float: right;height: 42px;padding: 0px;" />
+					<input type="button" id="fyzm" ng-click="fayanzmaFn()" class="shisi"  value="获取验证码" style="width: 39%;float: right;height: 42px;padding: 0px;" />
   	 	</div>
   	 	<p style="margin-top: 15px;clear: both;">密码</p>
-  	 	<input id="dlmima" class="xinzinput" type="text" />
+  	 	<!--<input id="dlmima"  type="text" />-->
+  	 	<input type="password" class="xinzinput" id="password" name="password" ng-model="password" ng-minlength="6" ng-pattern="/^(?=.*?[a-zA-Z])(?=.*?[0-9])[a-zA-Z0-9]/" placeholder="密码" required />	
+  	 	<p>
+            <span style="color: red" ng-show="myForm.password.$invalid">
+                <span ng-show="myForm.password.$error.minlength">*密码长度不小于6</span>
+            		<span ng-show="myForm.password.$error.pattern">*密码必须由字母数字组成</span>
+            </span>
+      </p>
+  	 	<label for="passwordagain" class="col-sm-3 control-label" >确认密码：</label>
+      <div >
+          <input type="password"class="form-control" ng-model="passwordagain" name="passwordagain"id="passwordagain" placeholder="请再输一遍密码" required>
+          <p>
+            <span style="color: red" ng-show="myForm.password.$valid">
+                <span ng-show="passwordagain!=password">*两次密码输入不一致</span>
+            </span>
+          </p>
+      </div>
   	 	<div id="" style="margin-top:100px ;">
-  	 		<button ng-click="xinzenFn()" class="button button-full button-light" style="border: 1px solid #8e8e8e;border-radius:39px;" >
+  	 		<button ng-click="xinzenFn()" class="button button-full button-light" style="border: 1px solid #8e8e8e;border-radius:39px;" ng-disabled="myForm.nicen.$error.required ||myForm.password.$error.required ||myForm.password.$error.minlength|| myForm.password.$error.pattern||myForm.nicen.$error.required||myForm.nicen.$error.maxlength||myForm.yanzen.$error.required || passwordagain!=password" >
 	 			  新增代理
 	      </button>
   	 	</div>
   	 	
   	 </div>
-  	
+  	</form>
   </ion-content>
 </ion-view>

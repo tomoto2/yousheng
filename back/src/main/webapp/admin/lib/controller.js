@@ -1,5 +1,22 @@
 
+//var touurl="http://47.92.115.31/back";
 var touurl="http://localhost";
+var wait=60;  
+ function time(o) {  
+        if (wait == 0) {  
+            o.removeAttribute("disabled");            
+            o.value="获取验证码";  
+            wait = 60;  
+        } else {  
+            o.setAttribute("disabled", true);  
+            o.value="重新发送(" + wait + ")";  
+            wait--;  
+            setTimeout(function() {  
+                time(o)  
+            },  
+            1000)  
+        }  
+    }
 
 function ajax(data,urls,lei){
    var datas="";
@@ -118,7 +135,7 @@ angular.module('controllers',[])
 	var ye=1;
 	
 	var urls=touurl+'/ws/admin/getAllPlayer';
-	var data ={"size":10,"pageNo":ye} ;
+	var data ={"size":15,"pageNo":ye} ;
 	data= JSON.stringify(data);
 	var yh=ajax(data,urls,1)
 	$scope.count1=yh.pageCount;
@@ -185,7 +202,7 @@ angular.module('controllers',[])
 			}
 			$("#yhx").removeClass("disabled");
 			ye=ye-1
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,1);
 			$scope.yonghuData=datas.data;			
@@ -202,7 +219,7 @@ angular.module('controllers',[])
 			}else{
 				$("#yhx").removeClass("disabled");
 			}
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,1);
 			$scope.yonghuData=datas.data;
@@ -218,6 +235,9 @@ $(".modal-dialog").css("margin-top","200px");
 var indexs="";
 
 $scope.fjfkFn=function(index){
+	if($scope.yonghuData[index].nikeName==null){
+	   $scope.yonghuData[index].nikeName='';
+	}
 	$("#modal-demo").modal("show");
 	
  	var html='<p>玩  家  ID : '+$scope.yonghuData[index].uid+'</p><p>玩家昵称 : '+$scope.yonghuData[index].nikeName+'</p><p>剩余房卡 : '+$scope.yonghuData[index].card+'</p><input id="inputshu" type="text" /><button ng-click="qrtj1Fn('+index+')" class="btn radius">确认添加</button>'
@@ -248,10 +268,10 @@ $scope.fjfkFn=function(index){
 		success:function(res){
 			if(res.status==0){
 				$(".modal-body").html("<h3>充值成功</h3>");
+				location.reload();
 			}else{
 				$(".modal-body").html('<h3>'+res.errorMessage+'</h3>');
 			}
-			
 		    console.log(res);
 		},
 		error:function(res){
@@ -282,6 +302,7 @@ $scope.fjfkFn=function(index){
 		success:function(res){
 			if(res.status==0){
 				var datas=res.data;
+				$scope.count1=1;
 				$scope.yonghuData=[{"uid":datas.uid,"nikeName":datas.nikeName,"card":datas.card,"inviteTime":datas.inviteTime,"clubName":datas.clubName}]
 			}else{
 				alert(res.errorMessage);
@@ -297,33 +318,40 @@ $scope.fjfkFn=function(index){
  }
  
  
- $scope.kaiqiFn=function(index,event){
-    	
+ $scope.kaiqiFn=function(index,event){ 
+        var uid=$scope.yonghuData[index].uid;
+	var data ={"uid":uid,"canuse":"false"} ;
+        data= JSON.stringify(data);
+        var res =wanjqijin(data);
+        if(res.status==0){
     	  $(event.target).attr("disabled",true);
     	  $(event.target).next().attr("disabled",false);
-	$(event.target).addClass("wuxiao");
-          $(event.target).next().removeClass('wuxiao');
+    	  $(event.target).addClass("wuxiao");
+    	   $(event.target).next().removeClass('wuxiao');
     	   $(event.target).next().addClass('kedian');
-
-    	  //$(event.target).css("background","whitesmoke");
-    	  //$(event.target).css("color","#2D4964");
-    	 //$(event.target).next().css("background",'#2D4964');
-    	// $(event.target).next().css("color",'white');
+     	}else{
+     		alert(res.errorMessage)
+     	}
      	
-    };
-    $scope.jinzhiFn=function(index,event){
-    	
+ };
+ $scope.jinzhiFn=function(index,event){    	
+       	 var uid= $scope.yonghuData[index].uid;
+    	var data ={"uid":uid,"canuse":"true"} ;
+        data= JSON.stringify(data)
+        var res1 =wanjqijin(data);
+       console.log(res1)
+       if(res1.status==0){
        	 $(event.target).attr("disabled",true);
-    	$(event.target).prev().attr("disabled",false);
-           $(event.target).addClass("wuxiao");
-	  $(event.target).prev().removeClass('wuxiao');
-    	   $(event.target).prev().addClass('kedian');
-    	  //$(event.target).css("background","whitesmoke");
-    	  //$(event.target).css("color","#2D4964");
-    	 //$(event.target).prev().css("background",'#2D4964');
-    	// $(event.target).prev().css("color",'white');
-       
-    }
+    	 $(event.target).prev().attr("disabled",false);
+    	 $(event.target).addClass("wuxiao");
+    	 $(event.target).prev().removeClass('wuxiao');
+    	 $(event.target).prev().addClass('kedian');
+       }else{
+       	 alert(res1.errorMessage)
+       }
+ }
+ 
+
  
 })
 //代理信息
@@ -331,7 +359,7 @@ $scope.fjfkFn=function(index){
     $("#Huifold1 li").eq(2).addClass("navdown").siblings().removeClass("navdown");
 	var ye=1;
 	var urls=touurl+'/ws/admin/getAllProxy';
-	var data ={"size":10,"pageNo":ye} ;
+	var data ={"size":15,"pageNo":ye} ;
 	data= JSON.stringify(data);
 	var datas=ajax(data,urls,2);
 	$scope.count=datas.pageCount;
@@ -346,16 +374,7 @@ $scope.fjfkFn=function(index){
 		}else{
 			$("#dlx").removeClass("disabled");
 	}
-		for(var i=0;i<$scope.dailiData.length;i++){
-			if($scope.dailiData[i].phone==null){
-						
-			}else{
-				var phone= $scope.dailiData[i].phone
-				var myphone = phone.substr(3, 4);  
-				$scope.dailiData[i].phone= phone.replace(myphone, "****");
-			}
-				     
-		}
+		
 	//分页 shang
 	$scope.xxsyyFn=function(){
 		if(ye<=1){
@@ -368,20 +387,10 @@ $scope.fjfkFn=function(index){
 				$("#dls").removeClass("disabled");
 			}
 			ye=ye-1;
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,2);
 			$scope.dailiData=datas.data;
-			for(var i=0;i<$scope.dailiData.length;i++){
-				if($scope.dailiData[i].phone==null){
-							
-				}else{
-					var phone= $scope.dailiData[i].phone
-					var myphone = phone.substr(3, 4);  
-					$scope.dailiData[i].phone= phone.replace(myphone, "****");
-				}
-					     
-			}
 		}
 		
 	}
@@ -397,20 +406,11 @@ $scope.fjfkFn=function(index){
 			}else{
 				$("#dlx").removeClass("disabled");
 			}
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,2);
 			$scope.dailiData=datas.data;
-			for(var i=0;i<$scope.dailiData.length;i++){
-				if($scope.dailiData[i].phone==null){
-							
-				}else{
-					var phone= $scope.dailiData[i].phone
-					var myphone = phone.substr(3, 4);  
-					$scope.dailiData[i].phone= phone.replace(myphone, "****");
-				}
-					     
-			}
+			
 		}
 	}
 	
@@ -435,9 +435,7 @@ $scope.fjfkFn=function(index){
 			success:function(res){
 				if(res.status==0){
 					var datas=res.data;
-					var phone= datas.phone
-					var myphone = phone.substr(3, 4);  
-					datas.phone= phone.replace(myphone, "****");
+					$scope.count=1;
 				
 					$scope.dailiData=[{"inviteCode":datas.inviteCode,"nikeName":datas.nikeName,"wx":datas.wx,"phone":datas.phone,"card":datas.card,"balance":datas.balance,"Allchongzhi":datas.Allchongzhi,"allgoumai":datas.allgoumai}]
 				}else{
@@ -453,12 +451,68 @@ $scope.fjfkFn=function(index){
 	 }
   }
 })
+//新增代理
+.controller("xinzengCtrl",function($scope){
+$("#Huifold1 li").eq(3).addClass("navdown").siblings().removeClass("navdown");
+$("#yzm").click(function(){ 
+  	 var phone =$("#sjh").val();
+  	 if(phone==""){
+  	 	alert("请输入手机号")
+  	 }else{
+  	  console.log(phone);
+  	  time(this);
+        $.ajax({
+            url:touurl+"/ws/account/verifyCode",
+            type:"POST",
+            contentType:"application/json",
+            data:{"phone":phone},
+            success:function(res){
+                    console.log(res);
+            },
+            error:function(res){
+                console.log(res)
+            }
+        });
+      }
+    });
+
+$scope.xinzdlFn=function(){
+		var phones =$("#sjh").val();
+	  	var name = $("#nicen").val();
+	  	var inviteCode=$("#yaoqin").val();
+	  	var passwords= $("#password").val();
+	  	var qrpasswords= $("#qrpassword").val();
+	  	var verifyCode = $("#yanzen").val();
+	  	var data = {nikeName:name,phone:phones,inviteCode:inviteCode,password:passwords,verifyCode:verifyCode,type:1,isSpecial:true};
+       data= JSON.stringify(data);
+		       $.ajax({
+		            url:touurl+"/ws/account/addAgent ",
+		            type:"POST",
+		            contentType:"application/json",
+		//          processData:false,
+		            data:data,
+		            success:function(res){
+		            	if(res.status==0){
+		            		alert("新增代理成功");
+		            		location.reload();
+		            	}else{
+		            		alert(res.errorMessage);
+		            	}
+		            },
+		            error:function(res){
+		                console.log(res)
+		            }
+		        })
+			}
+
+})
+
 //代理架构
-.controller("dailijgCtrl",function($scope){
-	$("#Huifold1 li").eq(3).addClass("navdown").siblings().removeClass("navdown");
+.controller("dailijgCtrl",function($scope,$compile){
+	$("#Huifold1 li").eq(4).addClass("navdown").siblings().removeClass("navdown");
 	var ye=1
 	var urls=touurl+"/ws/admin/ProxySet";
-	var data ={"size":10,"pageNo":ye};
+	var data ={"size":15,"pageNo":ye};
 	data= JSON.stringify(data);
 	var jg=ajax(data,urls,3);
 	$scope.count3=jg.pageCount;
@@ -473,17 +527,7 @@ $scope.fjfkFn=function(index){
 		}else{
 			$("#jgx").removeClass("disabled");
 	}
-	for(var i=0;i<$scope.jiagouData.length;i++){
-			if($scope.jiagouData[i].parentPhone==null){
-						
-			}else{
-				
-				var phone= $scope.jiagouData[i].parentPhone
-				var myphone = phone.substr(3, 4);  
-				$scope.jiagouData[i].parentPhone= phone.replace(myphone, "****");
-			}
-				     
-		}
+	
 	//启用
 	$scope.qiyFn=function(index,event){
 		var pid=$scope.jiagouData[index].pid;
@@ -525,7 +569,49 @@ $scope.fjfkFn=function(index){
             }
           }
 	}
-	 
+	//管理
+	$scope.guanliFn=function(index,event){
+		$(".modal-content ").css("height","300px");
+        $(".modal-content ").css("width","400px");
+        $(".modal-dialog").css("margin-top","200px");
+		var jgId=$scope.jiagouData[index].inviteCode;
+		if(jgId=='123456'){
+			alert("此为根代理，不可添加上级")
+		}else{
+			$("#modal-demos").modal("show");
+		 	var html='<p>代理  ID : '+jgId+'</p><input id="sjId" placeholder="请输入新上级ID" type="text" /><button ng-click="xiugaiFn('+index+')" class="btn radius">确认修改</button>'
+ 	    	var $html = $compile(html)($scope);
+	   	 $(".modal-bodys").html($html);
+		}
+		
+		console.log(jgId);
+	}
+	$scope.xiugaiFn=function(index){
+		console.log(index);
+		var yuans=$scope.jiagouData[index].inviteCode;
+		var xin=$("#sjId").val();
+		var urls=touurl+'/ws/admin/uptFather';
+     	var data={"formAgentNum":yuans,"toAgentNum":xin};
+	  $.ajax({
+			url:urls,
+			type:"GET",
+			async:false,
+			data:data,
+			dataType:"json",
+			success:function(res){
+				if(res.status==0){
+					$(".modal-bodys").html("<h3>修改成功</h3>");
+					location.reload();
+				}else{
+					$(".modal-bodys").html('<h3>'+res.errorMessage+'</h3>');
+				}
+			    console.log(res);
+			},
+			error:function(res){
+			    console.log(res)
+			}
+	   });
+	}
 	$scope.jgsyyFn=function(){
 		if(ye<=1){
 			$("#jgs").addClass("disabled");
@@ -537,20 +623,11 @@ $scope.fjfkFn=function(index){
 			    $("#jgs").removeClass("disabled");
 			}
 			ye=ye-1;
-			var data ={"size":10,"pageNo":ye} ;
-			data= JSON.stringify(data);
+			var data ={"size":15,"pageNo":ye} ;
+			 data= JSON.stringify(data);
 			var datas=ajax(data,urls,1);
 			$scope.jiagouData=datas.data;
-			for(var i=0;i<$scope.jiagouData.length;i++){
-				if($scope.jiagouData[i].parentPhone==null){
-							
-				}else{
-					var phone= $scope.jiagouData[i].parentPhone
-					var myphone = phone.substr(3, 4);  
-					$scope.jiagouData[i].parentPhone= phone.replace(myphone, "****");
-				}
-					     
-			}
+			
 		}		
 	}
 	$scope.jgxyyFn=function(){
@@ -564,20 +641,11 @@ $scope.fjfkFn=function(index){
 			}else{
 				$("#jgx").removeClass("disabled");
 			}
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,1);
 			$scope.jiagouData=datas.data;
-			for(var i=0;i<$scope.jiagouData.length;i++){
-				if($scope.jiagouData[i].parentPhone==null){
-							
-				}else{
-					var phone= $scope.jiagouData[i].parentPhone
-					var myphone = phone.substr(3, 4);  
-					$scope.jiagouData[i].parentPhone= phone.replace(myphone, "****");
-				}
-					     
-			}
+			
 		}
 	}
 	
@@ -603,10 +671,7 @@ $scope.fjfkFn=function(index){
 			success:function(res){
 				if(res.status==0){
 					var datas=res.data;
-					var phone= datas.parentPhone
-					var myphone = phone.substr(3, 4);  
-					datas.parentPhone= phone.replace(myphone, "****");
-				
+					$scope.count3=1;
 					$scope.jiagouData=[{"inviteCode":datas.inviteCode,"nikeName":datas.nikeName,"allgoumai":datas.allgoumai,"childSum":datas.childSum,"childBuySum":datas.childBuySum,"childMoneySum":datas.childMoneySum,"Allchongzhi":datas.Allchongzhi,"parentPhone":datas.parentPhone,"level":datas.level}]
 				}else{
 					alert(res.errorMessage);
@@ -623,10 +688,10 @@ $scope.fjfkFn=function(index){
 })
 //俱乐部管理
 .controller("julebuCtrl",function($scope,$state){
-	$("#Huifold1 li").eq(4).addClass("navdown").siblings().removeClass("navdown");
+	$("#Huifold1 li").eq(5).addClass("navdown").siblings().removeClass("navdown");
 	var ye=1;
 	var urls=touurl+'/ws/admin/getAllClub';
-	var data ={"size":10,"pageNo":ye} ;
+	var data ={"size":15,"pageNo":ye} ;
 	data= JSON.stringify(data);
 	var jlb=ajax(data,urls,4);
 	$scope.julebuData=jlb.data;
@@ -652,7 +717,7 @@ $scope.fjfkFn=function(index){
 			     $("#jlbs").removeClass("disabled");
 			}
 			ye=ye-1;
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,4);
 			$scope.julebuData=datas.data;			
@@ -669,7 +734,7 @@ $scope.fjfkFn=function(index){
 			}else{
 				$("#jlbx").removeClass("disabled");
 			}
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,4);
 			$scope.julebuData=datas.data;
@@ -730,6 +795,7 @@ $scope.fjfkFn=function(index){
 			success:function(res){
 				if(res.status==0){
 					var datas=res.data;
+					$scope.count4=1;
 					$scope.julebuData=[{"numId":datas.numId,"owner":datas.owner,"memberSum":datas.memberSum}]
 				}else{
 					alert(res.errorMessage);
@@ -746,11 +812,11 @@ $scope.fjfkFn=function(index){
 })
 //俱乐部成员
 .controller("chengyuanCtrl",function($scope,$state,$compile,$stateParams){
- $("#Huifold1 li").eq(4).addClass("navdown").siblings().removeClass("navdown");
+ $("#Huifold1 li").eq(5).addClass("navdown").siblings().removeClass("navdown");
  var dataId = decodeURIComponent($stateParams.id);
  var urls=touurl+'/ws/admin/getClubUserBycid';
  var ye=1;
- var data={"cid":dataId,"size":10,"pageNo":ye} ;
+ var data={"cid":dataId,"size":15,"pageNo":ye} ;
 	data= JSON.stringify(data);
 	var cy=ajax(data,urls);
  $scope.chengyuanData=cy.data;
@@ -776,7 +842,7 @@ $scope.fjfkFn=function(index){
 			     $("#cys").removeClass("disabled");
 			}
 			ye=ye-1
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,4);
 			$scope.chengyuanData=datas.data;			
@@ -793,7 +859,7 @@ $scope.fjfkFn=function(index){
 			}else{
 				$("#cyx").removeClass("disabled");
 			}
-			var data ={"size":10,"pageNo":ye} ;
+			var data ={"size":15,"pageNo":ye} ;
 			data= JSON.stringify(data);
 			var datas=ajax(data,urls,4);
 			$scope.chengyuanData=datas.data;
@@ -808,6 +874,9 @@ $(".modal-content ").css("width","400px");
 $(".modal-dialog").css("margin-top","200px");
 var kashu=""
 $scope.chakanFn=function(index){
+	if($scope.chengyuanData[index].nikeName==null){
+		$scope.chengyuanData[index].nikeName='';
+	}
 	$("#modal-demo1").modal("show");
  	var html='<p>玩  家  ID : '+$scope.chengyuanData[index].uid+'</p><p>玩家昵称 : '+$scope.chengyuanData[index].nikeName+'</p><p>剩余房卡 : '+$scope.chengyuanData[index].card+'</p><input id="kashu" type="text" /><button ng-click="qrtj1Fn('+$scope.chengyuanData[index].uid+')" class="btn radius">确认添加</button>'
  	var $html = $compile(html)($scope);
@@ -838,7 +907,7 @@ $scope.chakanFn=function(index){
 			}else{
 				$(".modal-body1").html('<h3>'+res.errorMessage+'</h3>');
 			}
-			
+			location.reload();
 		    console.log(res);
 		},
 		error:function(res){
@@ -871,6 +940,7 @@ $scope.chakanFn=function(index){
 			success:function(res){
 				if(res.status==0){
 					var datas=res.data;
+					$scope.count5=1;
 					$scope.chengyuanData=[{"uid":datas.uid,"nikeName":datas.nikeName,"card":datas.card}]
 				}else{
 					alert(res.errorMessage);
@@ -916,7 +986,7 @@ $scope.chakanFn=function(index){
 })
 //报表
 .controller("baobiaoCtrl",function($scope){
-	$("#Huifold1 li").eq(5).addClass("navdown").siblings().removeClass("navdown");
+	$("#Huifold1 li").eq(6).addClass("navdown").siblings().removeClass("navdown");
 	var demo = {
         elem:'#demo',
         format:'YYYY-MM'
@@ -968,8 +1038,8 @@ $.ajax({
    
   //报表搜索
    $scope.baobiaoFn=function(){
-   	var qis=$("#demo1").val();
-   	var jies=$("#demo").val();
+   	var jies=$("#demo1").val();
+   	var qis=$("#demo").val();
    	var urls=touurl+'/ws/admin/getBaobiaoTwoTime';
      var data={"beginTime":qis,"endTime":jies} ;
 //	  data= JSON.stringify(data);
@@ -1005,7 +1075,7 @@ $.ajax({
 })
 //返利
 .controller("fanliCtrl",function($scope,$compile){
- $("#Huifold1 li").eq(6).addClass("navdown").siblings().removeClass("navdown");
+ $("#Huifold1 li").eq(7).addClass("navdown").siblings().removeClass("navdown");
 	var time = {
         elem:'#time',
         format:'YYYY-MM'
@@ -1027,17 +1097,21 @@ $.ajax({
 	var urls=touurl+'/ws/admin/fanLi';
 	var datas={"searchTime":$scope.sous};
   	$scope.fanliData="";
+  	$scope.pt="";
+  	$scope.zonge="";
    $(function(){
     		$(".pageBox").pageFun({  /*在本地服务器上才能访问哦*/
     			interFace:touurl+'/ws/admin/fanLi',  /*接口*/
-    			displayCount:10,  /*每页显示总条数*/
+    			displayCount:15,  /*每页显示总条数*/
     			maxPage:1,/*每次最多加载多少页*/
     			datasData:datas,
-    			dataFun:function(data,i){
+    			dataFun:function(data,dat){
     				var istrue="";
 				var status='';
     				var dealWith="";
-				var dataHtml =''
+				var dataHtml ='';
+				$scope.pt=dat.pageCount;
+				$scope.zonge=dat.currentPage;
 				var bili =(data.onerate/100);
 					if(data.nikeName==null){
 						data.nikeName="";
@@ -1137,7 +1211,7 @@ $.ajax({
     $(function(){
     		$(".pageBox").pageFun({  /*在本地服务器上才能访问哦*/
     			interFace:urls,  /*接口*/
-    			displayCount:10,  /*每页显示总条数*/
+    			displayCount:15,  /*每页显示总条数*/
     			maxPage:1,/*每次最多加载多少页*/
     			datasData:data,
     			dataFun:function(data,i){
