@@ -10,9 +10,12 @@
   </ion-refresher>
   	 <div class="tou-m1" style="">
   	 	<div >
-  	 		 <input id="gktime" type="search" placeholder="输入如2017-01-01查看记录" style="height: 2.4rem;padding-left: 24px; width: 91%;border-radius:7%/50% ;" >
+  	 		 <input id="gktime" ng-click="goukaFn()" type="text" style="height: 2.4rem;padding-left: 24px; width: 91%;border-radius:7%/50% ;" >
   	    <i class="icon ion-ios-search-strong" style="font-size: 30px;float: right;margin-top: -36px;margin-right: 14px;" ng-click="jilusousFn()"></i>
 
+  	 	</div>
+  	 	<div id="wjl" style="display: none;text-align: center;">
+  	 		无购卡记录
   	 	</div>
   	 	<div class="shang" ng-repeat="item in goukaData" style="margin-top:15px ;background: white;height: 10rem;">
 	  	 		<div style="height: 2.5rem;border-bottom: 1px solid #d3d3d3; padding-left: 10px;line-height: 2.5rem;">

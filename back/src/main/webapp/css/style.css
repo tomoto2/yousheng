@@ -54,7 +54,6 @@ body{
 #mima input{
 	float: left;
 	width: 100%;
-	margin-bottom: 15px;
 	padding-left: 34px;
 	border: 1px solid #d3d3d3;
 	border-radius: 5px;
@@ -67,8 +66,7 @@ body{
 	color: #979797;
 }
 .dybutton{
-	background:#ff7733 ;
-	color: #ffffff;
+	background:#ff7733 ;color: #ffffff;
 	border-radius: 5px;
 }
 .tou-m{
@@ -84,6 +82,9 @@ body{
 	border-bottom: 1px solid #d3d3d3;
 	/*font-size: 16px;*/
 
+}
+.dybutton:hover{
+	background-color:#e18150;
 }
 .p1{
 	text-align: center;
@@ -101,6 +102,9 @@ body{
 #yeji{
 	/*font-size: 16px;*/
 
+}
+p{
+	margin: 0px;
 }
 #tx-tou{
 	height: 5rem;
@@ -194,9 +198,9 @@ body{
 .taocan .col{
 	height: 5rem;
 	text-align: center;
-	padding-top: 14px;
+	/*padding-top: 14px;*/
 	border: 1px solid #8e8e8e;
-	margin-left: 15px;
+	margin-left: 8px;
 	border-radius: 15px;
 }
 .taocan .col .pp1{
@@ -204,11 +208,12 @@ body{
 }
 .taocan .col .pp2{
   color: #b1b1b1;
+  margin-top: -8px;
 	/*font-size: 15px;*/	
 }
 
 .weixin-tip img{max-width: 100%; height: auto;}
-.weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; background: rgba(0,0,0,0.8); filter:alpha(opacity=80);  height: 100%; width: 100%; z-index: 100;}
+.weixin-tip{display: none; position: fixed; left:0; top:0; bottom:0; background: rgba(0,0,0,0.6); filter:alpha(opacity=80);  height: 100%; width: 100%; z-index: 100;}
 .weixin-tip p{ margin-top: 1%; padding:0 5%;}
 
 #zdyi{
@@ -225,6 +230,7 @@ body{
 }
 #zdyi .pp2{
     color: #b1b1b1;
+    margin-top: -8px;
 	/*font-size: 15px;*/	
 }
 #touc input{
@@ -305,7 +311,7 @@ body{
 #jlb-1{
 	background: #f2f2f2;
 	color: #333333;
-	padding: 15px 17px;
+	padding: 7px 17px;
 	/*font-size:18px ;*/
 	}
 /*代理架构*/

@@ -12,12 +12,15 @@
 		  			<div class="col">玩家ID</div>
 		  			<div class="col">昵称</div>
 		  			<div class="col">剩余房卡</div>
-		  			<div class="col">房卡数量</div>
+		  			<div class="col">充值数量</div>
 		  			<div class="col">售卡时间</div>
   		</div>
      <ion-list>
+     	  <div id="wcz" style="margin-top: 10px;display: none;text-align: center;">
+     	  	无充值信息
+     	  </div>
   		<div ng-repeat="item in congziData" class="row zong shiliu" style="padding-top: 10px; height: 3rem;margin-top: 10px;">
-  			<div class="col">{{item.uid}}</div>
+  			<div class="col">{{item.unumId}}</div>
   			<div class="col">{{item.nickName}}</div>
   			<div class="col">{{item.card}}</div>
   			<div class="col">{{item.cartSum}}</div>

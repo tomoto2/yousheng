@@ -1,4 +1,15 @@
- function gaifn(data,token){
+ (function(){
+window.alert = function(name){
+var iframe = document.createElement("IFRAME");
+iframe.style.display="none";
+iframe.setAttribute("src", 'data:text/plain');
+document.documentElement.appendChild(iframe);
+window.frames[0].window.alert(name);
+iframe.parentNode.removeChild(iframe);
+}
+})();
+
+function gaifn(data,token){
     	var ss="";
     	$.ajax({
 		        url:urltou+"/ws/userInfo/uptUserInfo",
@@ -19,6 +30,11 @@
 		    });
 		    return ss;
     }
+ function getFormatTime(times){
+	var format_time=times.slice(0,4)+"-"+times.slice(4,6)+"-"+times.slice(6,8)
+	+" "+times.slice(8,10)+":"+times.slice(10,12)+":"+times.slice(12,14);
+	return format_time;
+}
   function qijin(data,token){
     	var ss="";
     	$.ajax({
@@ -107,20 +123,20 @@ function is_weixin() {
 
 }	
 var wait=60;
-function time(o) {  
-        if (wait == 0) {  
-            o.removeAttribute("disabled");            
-            o.value="获取验证码";  
+function time() {  
+         if (wait == 0) {  
+            $("#fyzm").attr("disabled",false);            
+            $("#fyzm").val("获取验证码");  
             wait = 60;  
         } else {  
-            o.setAttribute("disabled", true);  
-            o.value="重新发送(" + wait + ")";  
+            $("#fyzm").attr("disabled", true);  
+            $("#fyzm").val("重新发送(" + wait + ")");  
             wait--;  
             setTimeout(function() {  
-                time(o)  
+                time()  
             },  
             1000)  
-        }  
+        } 
     } 
 //保留两位小数
 function returnFloat(value){
@@ -141,7 +157,7 @@ var nicen="";
 var wxhao="";
 var shenfz="";
 var token="";
-var urltou="http://localhost";
+var urltou="http://47.92.115.31/back";
 angular.module('starter.controllers', [])
 .controller('DashCtrl', function($scope,$state,$ionicLoading) {
 	  $ionicLoading.show();
@@ -150,6 +166,20 @@ angular.module('starter.controllers', [])
 	  token = aa.split("#")[0];
 	  console.log(token)
 	  $scope.fenLidata="";
+	var urls=urltou+'/ws/userInfo/getUserInfo';
+	  var yhData = ajaxGet(urls,token);
+	  var isSpecial=yhData.data.isSpecial;
+      if(isSpecial=="true"){
+      	      $scope.zahuzheng=0;
+			  $scope.zahuxiaoshu=0;
+			  //本月返利
+			  $scope.byzheng=0;
+			  $scope.byxiaoshu=0;
+			  //上月
+			  $scope.syzheng=0;
+			  $scope.syxiaoshu=0;
+			  $ionicLoading.hide();
+      }else{
 	  var urls = urltou+'/ws/profit/myFenli'
 	  var data= ajaxGet(urls,token);
 	  $scope.fenLidata=data.data;
@@ -172,6 +202,7 @@ angular.module('starter.controllers', [])
 		  $scope.syzheng=sangyueshu.split(".")[0];
 		  $scope.syxiaoshu=sangyueshu.split(".")[1];
 	}
+ }
 	$scope.doRefresh = function() {
       var datas= ajaxGet(urls,token);
 	  $scope.fenLidata=datas.data;
@@ -179,7 +210,11 @@ angular.module('starter.controllers', [])
       $scope.$broadcast('scroll.refreshComplete');
   };  
 	  
-	  
+	//计算返利比
+	$scope.flbjsFn=function(){
+		$state.go("tab.flbjs",{
+	     })
+	}
 	//提现
   $scope.tiXianFn = function () {
    $state.go("tab.tixian",{
@@ -199,24 +234,36 @@ angular.module('starter.controllers', [])
      })
   };  
 })
+.controller('flbjsCtrl',function($scope){
+     $scope.img="./templates/1.png";
+	$scope.goBackFn = function () {
+      window.history.go(-1);
+   };
+})
 .controller('tixianCtrl',function($scope,$state,$stateParams,$ionicPopup,$ionicLoading){
 	 
 	$ionicLoading.show();
 	$scope.img="./templates/wx.png";
 	$scope.img1="./templates/zfb.png";
-	var urls = urltou+'/ws/profit/myFenli';
-	var data= ajaxGet(urls,token);
-	$scope.yuee = data.data.balance;
 	var urls=urltou+'/ws/userInfo/getUserInfo';
 	var xinxData = ajaxGet(urls,token);
+	var isSpecial=xinxData.data.isSpecial;
+     if(isSpecial=="true"){
+     	$scope.yuee = 0.0;
+     }else{
+     	var urls = urltou+'/ws/profit/myFenli';
+	    var data= ajaxGet(urls,token);
+	   $scope.yuee = data.data.balance;
+     }
 	$scope.wxh=xinxData.data.wx;
 	$scope.zfb=xinxData.data.alipay;
 	$scope.name=xinxData.data.name;
 	$ionicLoading.hide();
 	var types="";
+	var typeshao="";
 	$scope.doRefresh = function() {
-       xinxData= ajaxGet(urls,token);
-	   $scope.wxh=xinxData.data.wx;
+      xinxData= ajaxGet(urls,token);
+	  $scope.wxh=xinxData.data.wx;
 	  $scope.zfb=xinxData.data.alipay;
 	  $scope.name=xinxData.data.name;
 	  // 结束加载
@@ -227,11 +274,13 @@ angular.module('starter.controllers', [])
    };
    $scope.wxFn=function(){
    	   types="wechatpay";
+   	   typeshao=$scope.wxh;
    	  $("#wx").css("display","block");
    	  $("#zfb").css("display","none");
    }
    $scope.zfbFn=function(){
    	 types="alipay";
+   	 typeshao=$scope.zfb;
    	 $("#wx").css("display","none");
    	 $("#zfb").css("display","block");
 
@@ -259,8 +308,16 @@ angular.module('starter.controllers', [])
 		　　　　myPopup.close();
 		　　}
 		  };
-	   }else{
-	   	var data ={"money":qianshu,"type":types} ;
+	   }else if(typeshao==null || typeshao==""){
+	   	 if(types=="wechatpay"){
+	   	 	alert("请输入微信号")
+	   	 }else if(types=="alipay"){
+	   	 	alert("请输入支付宝号")
+	   	 }else{
+	   	 	alert("请选择提现方式")
+	   	 }
+	   }else {
+	   	var data ={"money":qianshu,"type":types,"cashAliOrwechat":typeshao} ;
         data= JSON.stringify(data);
 		  $.ajax({
 			url:urltou+'/ws/agent/applyCash',
@@ -383,6 +440,11 @@ angular.module('starter.controllers', [])
                   	}else{
                   		$scope.tixianjlData[i].status="已返回";
                   	}
+                  	if($scope.tixianjlData[i].type=="alipay"){
+                  		$scope.tixianjlData[i].type="提现到支付宝"
+                  	}else{
+                  		$scope.tixianjlData[i].type="提现到微信"
+                  	}
                   }
                   $ionicLoading.hide();
                   console.log(res);
@@ -411,6 +473,11 @@ angular.module('starter.controllers', [])
                   		$scope.tixianjlData[i].status="已到账";
                   	}else{
                   		$scope.tixianjlData[i].status="已返回";
+                  	}
+                  	if($scope.tixianjlData[i].type=="alipay"){
+                  		$scope.tixianjlData[i].type="提现到支付宝"
+                  	}else{
+                  		$scope.tixianjlData[i].type="提现到微信"
                   	}
                   }
                   // 结束加载
@@ -452,6 +519,11 @@ angular.module('starter.controllers', [])
                   	}else{
                   		res.data[i].status="已返回";
                   	}
+                  	if(res.data[i].type=="alipay"){
+                  		res.data[i].type="提现到支付宝"
+                  	}else{
+                  		res.data[i].type="提现到微信"
+                  	}
                   }
 		        $scope.tixianjlData = $scope.tixianjlData.concat(res.data);
 		       
@@ -468,7 +540,26 @@ angular.module('starter.controllers', [])
 })
 .controller('yuefenCtrl', function($scope,$http,$ionicLoading) {
 	$ionicLoading.show();
-	$scope.yue=['1','2','3','4','5','6','7','8','9','10','11','12'];
+	$scope.yueFn=function(){
+			var currYear = (new Date()).getFullYear();	
+			var opt={};
+			opt.date = {preset : 'date'};
+			//opt.datetime = { preset : 'datetime', minDate: new Date(2012,3,10,9,22), maxDate: new Date(2014,7,30,15,44), stepMinute: 5  };
+			opt.datetime = {preset : 'datetime'};
+			opt.time = {preset : 'time'};
+			opt.default = {
+				theme: 'android-ics light',
+		        display: 'modal', 
+		        mode: 'scroller', 
+				lang:'zh',
+				dateFormat: 'yyyy-mm',
+		        startYear:currYear - 10,
+		        endYear:currYear + 10 
+			};
+	    	$("#appDate").val('').scroller('destroy').scroller($.extend(opt['date'], opt['default']));
+
+	}
+//	$scope.yue=['1','2','3','4','5','6','7','8','9','10','11','12'];
 	var mydata = new Date();
 	$scope.name= mydata.getFullYear();
 	$scope.month = mydata.getMonth()+1;
@@ -502,23 +593,6 @@ angular.module('starter.controllers', [])
                 $ionicLoading.hide();
             }
      });
-    $scope.jianFn=function(){
-    	$scope.name=$scope.name-1;
-    	$scope.sous = $scope.name+"-"+$scope.month;
-    };
-    $scope.jiaFn=function(){
-    	$scope.name=$scope.name+1;
-    	$scope.sous = $scope.name+"-"+$scope.month;
-    	console.log($scope.name)
-    };
-    $scope.jiyueFn=function(index){
-    	console.log(index);
-    	$scope.month=index+1;
-    	if($scope.month<10){
-			$scope.month="0"+$scope.month
-		}
-    	$scope.sous = $scope.name+"-"+$scope.month;
-    };
     $scope.yuesousuoFn=function(){ 
     $ionicLoading.show();
     var data =$("#times").val();
@@ -693,6 +767,11 @@ angular.module('starter.controllers', [])
             success:function(res){
                   $scope.julebuzixx=res.data;                 
                   console.log(res);
+if($scope.julebuzixx.length==0){
+       	$("#wjxx").css("display","block")
+       }else{
+       	$("#wjxx").css("display","none")
+       }
                   $ionicLoading.hide();
             },
             error:function(res){
@@ -700,6 +779,7 @@ angular.module('starter.controllers', [])
                 $ionicLoading.hide();
             }
        });
+  
   //下拉刷新
    $scope.doRefresh = function() {
    	  datas=ajaxGet(urls,token);
@@ -767,6 +847,13 @@ angular.module('starter.controllers', [])
  $scope.jlbsousuoFn= function() {
  	$ionicLoading.show();
  	$scope.vals = $("#jlbinput").val();
+	if($scope.vals==""){
+ 		alert("ID不能为空")
+        $ionicLoading.hide();
+ 	}else if($scope.vals.length>6){
+ 		alert("请输入正确ID")
+        $ionicLoading.hide();
+ 	}else{
  	$scope.jlbsousuoData="";
  	var data =$scope.vals;
 	$.ajax({
@@ -778,18 +865,17 @@ angular.module('starter.controllers', [])
 	        },
             data:data,
             success:function(res){
-				if(res.status ==1 ){
-                  	
-                  
+		if(res.status ==0 ){
+                 
                   $scope.jlbsousuoData=res.data;
-                  if($scope.jlbsousuoData.sign==1){
-                  	var ss=[{"uid":$scope.jlbsousuoData.uid,"nikeName":$scope.jlbsousuoData.nikeName,"card":$scope.jlbsousuoData.card}];
+                  if(res.data.sign=="1"){
+                  	var ss=[{"uid":$scope.jlbsousuoData.uid,"name":$scope.jlbsousuoData.nikeName,"card":$scope.jlbsousuoData.card}];
                   	console.log(ss)
                   	 $scope.julebuzixx=ss;
                   	 $ionicLoading.hide();
-                  }else if($scope.jlbsousuoData.sign==2){
+                  }else if(res.data.sign=="4"){
                   	$ionicLoading.hide();
-                  var myPopup = $ionicPopup.show({
+                 		 var myPopup = $ionicPopup.show({
 				    template: '<div style=" height: 10rem;text-align: center;font-size: 18px;padding-top:20px;background:white">玩家昵称：'+$scope.jlbsousuoData.nikeName+'<br/>ID:'+$scope.jlbsousuoData.uid+'<br/><input id="fangka" placeholder="请输入充值房卡数量" style="border: 1px solid #8e8e8e;height:2.5rem;border-radius:20px; padding-left:40px;margin-top:10px;">'
 				   +' <p style="color:#b1b1b1;font-size: 16px;margin-top:10px">注：此玩家非俱乐部成员，是否确定为他充值</p></div>'
 				   +'<button ng-click="quedinFn()" class="button" style=" width: 100px;margin-top:10px; background-color:white;color:#333333;border: 1px solid #8e8e8e;width:231px">确定</button>'
@@ -802,7 +888,7 @@ angular.module('starter.controllers', [])
 				  $scope.quedinFn=function(){
 				  	var shul=$("#fangka").val();
 				  	var data ={"cartSum":shul,"uid":$scope.jlbsousuoData.uid} ;
-                     data= JSON.stringify(data);
+                    		 data= JSON.stringify(data);
 				   $.ajax({
 			            url:urltou+"/ws/agent/chongzhi",
 			            type:"POST",
@@ -812,7 +898,11 @@ angular.module('starter.controllers', [])
 				        },
 			            data:data,
 			            success:function(res){ 
-			            	
+			            	if(res.status==0){
+			            		alert("充值成功")
+			            	}else{
+			            	alert(res.errorMessage)
+			            	}
 			                  console.log(res);
 			            },
 			            error:function(res){
@@ -830,15 +920,18 @@ angular.module('starter.controllers', [])
 				　　　　　myPopup.close();
 				　　}
 				  }
-              }else{
-              	$ionicLoading.hide();
-              	alert("无此用户");
-              }
-		    }else if(res.status==204){
+             		 }else if($scope.jlbsousuoData.sign=="2"){
+              			$ionicLoading.hide();
+                 			alert("此用户为其他俱乐部成员,不可充值");
+             		 }else{
+              			$ionicLoading.hide();
+              			alert("无此用户");
+             		 }
+  		}else if(res.status==204){
 				$ionicLoading.hide();
 				alert("无此用户");
-           }else{
-			   $ionicLoading.hide();
+        	        }else{
+			 $ionicLoading.hide();
                  alert(res.errorMessage)
 		   }
             },
@@ -846,10 +939,14 @@ angular.module('starter.controllers', [])
                 console.log(res)
             }
       });
+   }
  };
  $scope.qunzhuFn=function(index){
  var num = $scope.julebuzixx[index].uid;
  var remarks=$scope.julebuzixx[index].remarks;
+ if(remarks==null){
+ 	remarks='';
+ }
  console.log(remarks)
   $scope.data = {};
   // 自定义弹窗
@@ -900,10 +997,10 @@ angular.module('starter.controllers', [])
  };
  $scope.guanliFn=function(index){
  	  var uid = $scope.julebuzixx[index].uid;
-      var nikeName=$scope.julebuzixx[index].nikeName;
+      var nikeName=$scope.julebuzixx[index].name;
 	  var myPopup = $ionicPopup.show({
 	    template: '<div style=" height: 7rem;text-align: center;font-size: 18px;padding-top:2rem;background:white">玩家昵称：'+nikeName+'<br/>ID:'+uid+'</div>'
-	   +'<button ng-click="quedinFn()" class="button" style=" width: 100px;margin-top:10px; background-color:white;color:#333333;border: 1px solid #8e8e8e;width:231px">移出俱乐部</button>'
+	   +'<button  ng-click="quedinFn()" class="button" style=" width: 100px;margin-top:10px; background-color:white;color:#333333;border: 1px solid #8e8e8e;width:231px">移出俱乐部</button>'
 	   +'<button ng-click="quxiaoFn()" class="button" style=" width: 100px;margin-top:10px; background-color:white;color:#333333;border: 1px solid #8e8e8e;width:231px">取消</button>',
 	    title: '成员管理',
 	    cssClass: '',
@@ -912,15 +1009,19 @@ angular.module('starter.controllers', [])
 	  });
 	  $scope.quedinFn=function(){
 	  var data =uid ;
+	   data= JSON.stringify(data);
+	   //alert("aaa");
 	  $.ajax({
             url:urltou+"/ws/user/removeClub",
             type:"POST",
+	   async:false,
             contentType:"application/json",
             beforeSend: function(request){
 	           request.setRequestHeader("Access-Control-Allow-Headers",token);
 	        },
             data:data,
             success:function(res){ 
+            	 //alert("bbbb");
             	if(res.status==0){
             		alert("移除成功")
             	}else{
@@ -929,9 +1030,12 @@ angular.module('starter.controllers', [])
                   console.log(res);
             },
             error:function(res){
+            	// alert("ccc");
+		alert("连接出错，请重试")
                 console.log(res)
             }
        });
+        //alert("ddd");
 	  	if (myPopup) {
 	　　　　　myPopup.close();
 	　　}
@@ -946,7 +1050,7 @@ angular.module('starter.controllers', [])
    };
  $scope.chongzhiFn=function(index){
   	  var uid = $scope.julebuzixx[index].uid;
-      var nikeName=$scope.julebuzixx[index].nikeName;
+      var nikeName=$scope.julebuzixx[index].name;
       var card=$scope.julebuzixx[index].card;
 	 var myPopup = $ionicPopup.show({
 	    template: '<div style=" height: 6rem;text-align: center;font-size: 18px;padding-top:1rem;background:white">玩家昵称:'+nikeName+'<br/>ID:'+uid+'<br/>玩家剩余房卡数:'+card+'</div><input id="cks"  placeholder="请输入充值房卡数量" style="border: 1px solid #8e8e8e;height:2.5rem;border-radius:20px; padding-left:40px;">'
@@ -976,7 +1080,7 @@ angular.module('starter.controllers', [])
                    }else{
                    	alert(res.errorMessage)
                    }
-//                 location.reload()
+                 location.reload()
             },
             error:function(res){
                 console.log(res)
@@ -1014,23 +1118,25 @@ angular.module('starter.controllers', [])
 	        },
             data:data,
             success:function(res){
-                  $scope.congziData=res.data;
-				  for(var i=0;i<$scope.congziData.length;i++){
-                  		var time=$scope.congziData[i].datetime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			$scope.congziData[i].datetime=time;
-		                console.log(time)
+                 $scope.congziData=res.data;
+                              if(res.status==0){
+                 
+		for(var i=0;i<$scope.congziData.length;i++){
+                  var time=$scope.congziData[i].datetime;
+	          $scope.congziData[i].datetime=getFormatTime(time);
+		       console.log(res.data)
                     }
-                  $ionicLoading.hide();
+                   $ionicLoading.hide();
+		}else{
+            		$ionicLoading.hide();
+            		alert(res.errorMessage);	
+            	}
+                  
+                  if($scope.congziData.length==0){
+                  	$("#wcz").css("display","block");
+                  }else{
+                  	$("#wcz").css("display","none");
+                  }
 //                console.log($scope.congziData[1].uid);
             },
             error:function(res){
@@ -1053,17 +1159,8 @@ angular.module('starter.controllers', [])
                   $scope.congziData=res.data;
 				  for(var i=0;i<$scope.congziData.length;i++){
                   		var time=$scope.congziData[i].datetime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			$scope.congziData[i].datetime=time;
+                  		$scope.congziData[i].datetime=getFormatTime(time);
+
 		                console.log(time)
                     }
             },
@@ -1095,17 +1192,9 @@ angular.module('starter.controllers', [])
                  }
                  for(var i=0;i<res.data.length;i++){
                   		var time=res.data[i].datetime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			res.data[i].datetime=time;
+                  		 res.data[i].datetime=getFormatTime(time);
+
+
 		                console.log(time)
                     }
 		        $scope.congziData = $scope.congziData.concat(res.data);
@@ -1195,7 +1284,11 @@ angular.module('starter.controllers', [])
                 $ionicLoading.hide();
             }
        });
-  
+   if($scope.dailixData.length==0){
+   	$("#wdlx").css("display","block")
+   }else{
+   	$("#wdlx").css("display","none")
+   }
   $scope.doRefresh = function() {
   	 $.ajax({
             url:urltou+"/ws/agent/getDirectChild",
@@ -1291,7 +1384,7 @@ angular.module('starter.controllers', [])
     
     //发送验证码
     $scope.fayanzmaFn=function(){
-    time(this);
+      time();
      phone = $("#sjhao").val();
     	console.log("发送验证码");
     	 $.ajax({
@@ -1309,9 +1402,9 @@ angular.module('starter.controllers', [])
     }
     //新增代理
     $scope.xinzenFn=function(){
-    var name=$("#nic").val();
+    var name=$("#nicen").val();
     var yzm = $("#yzma").val();
-    var passwords=$("#dlmima").val();
+    var passwords=$("#password").val();
     var data = {nikeName:name,phone:phone,password:passwords,verifyCode:yzm,type:2};
        data= JSON.stringify(data);
        $.ajax({
@@ -1407,6 +1500,11 @@ angular.module('starter.controllers', [])
   var urls=urltou+'/ws/agent/agentPolicy'
    var dljg=ajaxGet(urls,token);
     $scope.dljgData=dljg.data;
+    if($scope.dljgData.length==0){
+    	$("#wdl").css("display","block")
+    }else{
+    	$("#wdl").css("display","none")
+    }
     console.log(dljg);
     $ionicLoading.hide();
   $scope.goBackFn = function () {
@@ -1444,18 +1542,60 @@ angular.module('starter.controllers', [])
       window.history.go(-1);
    };
     //查询
-   $(function(){
-   	  var joeCalendar = new JoeCalendar();
-      joeCalendar.init("txtBeginDate","jiesu");
-   
-   });
+    
+    
+    $scope.kaisiFn=function(){
+    	var currYear = (new Date()).getFullYear();	
+			var opt={};
+			opt.date = {preset : 'date'};
+			//opt.datetime = { preset : 'datetime', minDate: new Date(2012,3,10,9,22), maxDate: new Date(2014,7,30,15,44), stepMinute: 5  };
+			opt.datetime = {preset : 'datetime'};
+			opt.time = {preset : 'time'};
+			opt.default = {
+				theme: 'android-ics light', //皮肤样式
+		        display: 'modal', //显示方式 
+		        mode: 'scroller', //日期选择模式
+				lang:'zh',
+				dateFormat: 'yyyy-mm-dd',
+		        startYear:currYear - 10, //开始年份
+		        endYear:currYear + 10 //结束年份
+			};
+
+		$("#txtDate").val('').scroller('destroy').scroller($.extend(opt['date'], opt['default']));
+
+    }
+     $scope.jiesuFn=function(){
+    	var currYear = (new Date()).getFullYear();	
+			var opt={};
+			opt.time = {preset : 'date'};
+			opt.default = {
+				theme: 'android-ics light', //皮肤样式
+		        display: 'modal', //显示方式 
+		        mode: 'scroller', //日期选择模式
+				lang:'zh',
+				dateFormat: 'yyyy-mm-dd',
+		        startYear:currYear - 10, //开始年份
+		        endYear:currYear + 10 //结束年份
+			};
+
+		$("#jiesu").val('').scroller('destroy').scroller($.extend(opt['time'], opt['default']));
+
+    }
+    
+    
+    
+// $(function(){
+// 	  var joeCalendar = new JoeCalendar();
+//    joeCalendar.init("txtBeginDate","jiesu");
+// 
+// });
   $scope.baobiaochaFn=function(){
   	$ionicLoading.show();
-  	if($("#txtBeginDate").val()==""){
+  	if($("#txtDate").val()==""){
   		alert("请选择输入日期");
 	   $ionicLoading.hide();
   	}else{
-    var qishi =	$("#txtBeginDate").val();
+    var qishi =	$("#txtDate").val();
     qishi=qishi+" 00:00:00";
     var jieshu =$("#jiesu").val();
     jieshu=jieshu+" 00:00:00";
@@ -1519,7 +1659,7 @@ $scope.xinxGaiFn=function(){
      })
   }
   $scope.gaimimaFn=function(){
-  	window.location.href='http://47.92.115.31/back/czmima.html?name='+token 
+  	window.location.href='http://mingmen.mingmenhuyu.com/back/czmima.html?name='+token 
   }
 })
 //个人信息修改
@@ -1656,23 +1796,15 @@ $scope.xinxGaiFn=function(){
                   	$scope.goukaData=ss;
                   for(var i=0;i<$scope.goukaData.length;i++){
                   		var time=$scope.goukaData[i].createTime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			$scope.goukaData[i].createTime=time;
+                  		 res.data[i].createTime= getFormatTime(time);
 		                console.log(time);
-		                if($scope.goukaData[i].payWay=="1 "|| $scope.goukaData[i].payWay=='alipay'){
+		                if($scope.goukaData[i].payWay==1 || $scope.goukaData[i].payWay=='alipay'){
 	          				$scope.goukaData[i].payWay="支付宝支付"
-	          			}else{
+	          			}else if($scope.goukaData[i].payWay==2 || $scope.goukaData[i].payWay=='wechatpay'){
 	          				$scope.goukaData[i].payWay="微信支付"
-	          			}
+	          			}else{
+					 $scope.goukaData[i].payWay="";
+					}
                     }
                   	$ionicLoading.hide();
                   }else{
@@ -1687,8 +1819,12 @@ $scope.xinxGaiFn=function(){
                 $ionicLoading.hide();
             }
        });
-       
-    $scope.doRefresh = function() {
+       if($scope.goukaData.length==0){
+       	$("#wjl").css("display","block")
+       }else{
+       	$("#wjl").css("display","none")
+       }
+        $scope.doRefresh = function() {
       $.ajax({
             url:urltou+"/ws/agent/agentCZList",
             type:"POST",
@@ -1704,23 +1840,15 @@ $scope.xinxGaiFn=function(){
                   	$scope.goukaData=ss;
                   for(var i=0;i<$scope.goukaData.length;i++){
                   		var time=$scope.goukaData[i].createTime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			$scope.goukaData[i].createTime=time;
+                  		 res.data[i].createTime= getFormatTime(time)
 		                console.log(time);
-		                if($scope.goukaData[i].payWay=="1 "|| $scope.goukaData[i].payWay=='alipay'){
+		                if($scope.goukaData[i].payWay==1 || $scope.goukaData[i].payWay=='alipay'){
 	          				$scope.goukaData[i].payWay="支付宝支付"
-	          			}else{
+	          			}else if($scope.goukaData[i].payWay==2 || $scope.goukaData[i].payWay=='wechatpay'){
 	          				$scope.goukaData[i].payWay="微信支付"
-	          			}
+	          			}else{
+					 $scope.goukaData[i].payWay="";
+					}
 		              }
                   	
                   }else{
@@ -1737,7 +1865,8 @@ $scope.xinxGaiFn=function(){
          // 结束加载
      $scope.$broadcast('scroll.refreshComplete');  
                   	 
-   }
+   }   
+
    $scope.loadMore = function() {
     $scope.count += 1;
     var datas ={"size":10,"pageNo": $scope.count} ;
@@ -1760,23 +1889,15 @@ $scope.xinxGaiFn=function(){
                  }
                 for(var i=0;i<res.data.length;i++){
                   		var time=res.data[i].createTime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t3=time.substr(13,13);
-	          			time= time.replace(t3, ":"+t3);
-	          			var t4=time.substr(16,16);
-	          			time= time.replace(t4, ":"+t4);
-	          			res.data[i].createTime=time;
-		                console.log(time);
-		                if(res.data[i].payWay=="1 "|| res.data[i].payWay=='alipay'){
+                                   res.data[i].createTime= getFormatTime(time)
+
+		                if(res.data[i].payWay==1 || res.data[i].payWay=='alipay'){
 	          				res.data[i].payWay="支付宝支付"
+	          			}else if($scope.goukaData[i].payWay==2 || $scope.goukaData[i].payWay=='wechatpay'){
+	          				$scope.goukaData[i].payWay="微信支付"
 	          			}else{
-	          				res.data[i].payWay="微信支付"
-	          			}
+					 $scope.goukaData[i].payWay="";
+					}
                   	}
 		        $scope.goukaData = $scope.goukaData.concat(res.data);
 		        // 结束加载
@@ -1792,6 +1913,25 @@ $scope.xinxGaiFn=function(){
    $scope.goBackFn = function () {
        window.history.go(-1);
    };
+   
+    $scope.goukaFn=function(){
+    	var currYear = (new Date()).getFullYear();	
+			var opt={};
+			opt.timed = {preset : 'date'};
+			opt.default = {
+				theme: 'android-ics light', //皮肤样式
+		        display: 'modal', //显示方式 
+		        mode: 'scroller', //日期选择模式
+				lang:'zh',
+				dateFormat: 'yyyy-mm-dd',
+		        startYear:currYear - 10, //开始年份
+		        endYear:currYear + 10 //结束年份
+			};
+
+		$("#gktime").val('').scroller('destroy').scroller($.extend(opt['timed'], opt['default']));
+    }
+   
+   
   $scope.jilusousFn=function(){
   	$ionicLoading.show();
   	$scope.goukaData='';
@@ -1818,20 +1958,15 @@ $scope.xinxGaiFn=function(){
                   	$scope.goukaData=res.data;
                   	 for(var i=0;i<$scope.goukaData.length;i++){
                   		var time=$scope.goukaData[i].createTime;
-                  		var times = time.substr(4, 4);  
-	          			time= time.replace(times, "-"+times);
-	          			var t1=time.substr(7,7);
-	          			time= time.replace(t1, "-"+t1);
-	          			var t2=time.substr(10,10);
-	          			time= time.replace(t2, " "+t2);
-	          			var t2=time.substr(13,13);
-	          			time= time.replace(t2, ":"+t2);
-	          			var t2=time.substr(16,16);
-	          			time= time.replace(t2, ":"+t2);
-	          			$scope.goukaData[i].createTime=time;
+                  		$scope.goukaData[i].createTime= getFormatTime(time)
+
 		                console.log(time)
                   	}
-                  	
+                  	 if($scope.goukaData.length==0){
+       			$("#wjl").css("display","block")
+      			 }else{
+       			$("#wjl").css("display","none")
+     			  }
                   	$ionicLoading.hide();
                   }else{
                   	 alert(res.errorMessage);
@@ -1885,9 +2020,30 @@ $scope.xinxGaiFn=function(){
       window.history.go(-1);
     
   };
+     $.ajax({
+            url:urltou+"/ws/agent/getNotice",
+            type:"GET",
+            contentType:"application/json",
+            beforeSend: function(request){
+	           request.setRequestHeader("Access-Control-Allow-Headers", token);
+	        },
+            success:function(res){
+            	 if(res.status==0){
+                    $scope.id=res.data.cnid;
+            	  $scope.text=res.data.text;
+            	 }else{
+            	 	alert(res.errorMessage)
+            	 }
+              
+            },
+            error:function(res){
+                console.log(res)
+            }
+        })
+ 
   $scope.gonggaofabuFn=function(){
-  	var content= $("#content").val();
-  	var data ={"text":content} ;
+  var content= $("#content").val();
+  var data ={"text":content,"cnid":$scope.id} ;
      data= JSON.stringify(data);
      console.log(token);
   	$.ajax({
@@ -1899,7 +2055,12 @@ $scope.xinxGaiFn=function(){
 	        },
             data:data,
             success:function(res){
-                  alert(res.errorMessage)
+				if(res.status==0){
+            	 	alert("发布成功")
+            	 }else{
+            	 	alert(res.errorMessage);
+            	 }
+                  
             },
             error:function(res){
                 console.log(res)
