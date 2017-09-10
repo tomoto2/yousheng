@@ -1,5 +1,11 @@
 package com.joe.frame.core.service;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.ConnectException;
+import java.net.URL;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.net.ssl.HttpsURLConnection;
 import javax.persistence.LockModeType;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -54,10 +61,14 @@ import com.joe.frame.core.repository.ProxyRepository;
 import com.joe.frame.core.repository.RechargeRepository;
 import com.joe.frame.core.repository.UsersRepository;
 import com.joe.frame.core.trade.entity.OrderStatus;
+import com.joe.frame.pay.prop.WechatProp;
 import com.joe.frame.pay.wechatpay.dto.PayOrder;
 import com.joe.frame.pay.wechatpay.service.WechatOrderService;
-import com.joe.frame.web.dto.BaseDTO;
 import com.joe.frame.web.dto.NormalDTO;
+import com.lpx.wx.send.gettoken.WeiXinAccessTokenUtil;
+
+import net.sf.json.JSONException;
+import net.sf.json.JSONObject;
 
 @Service
 @Transactional
@@ -88,10 +99,36 @@ public class AgentService {
 	private WechatOrderService orderService;
 	@Context
 	private HttpServletRequest request;
+	@Autowired
+	private WechatProp wechatPayProp;
 
 	public int saveUser(User u) {
 		usersRepository.merge(u);
 		return 0;
+	}
+	
+	//测试发送消息
+	public void senmsg(){
+		/**
+		 * 发送消息
+		 * @param pid 代理32位id
+		 * @param money 支付金额 单位元
+		 * @param goodsMsg 商品信息(商品名字，商品数量)
+		 * @param proxyNum 代理编号()
+		 * @param dateTime 订单支付时间
+		 * @param orderNum 订单编号
+		 */
+		Recharge order = new Recharge();
+		order.setId("1");
+		order.setMoney(20000);
+		order.setCreateTime("2017-9-10");
+		order.setNumber(10);
+		order.setOrderNum("2017010101");
+		order.setAgentUid("d4f0828cf03845c7b93c0ce437d2a45c");
+		
+		String orderMoney = String.valueOf(order.getMoney()/100);
+		String ordernum = String.valueOf(order.getNumber());
+	    sentAll(order.getAgentUid(),orderMoney,order.getPname(),ordernum,order.getCreateTime(),order.getOrderNum());
 	}
 
 	/**
@@ -319,9 +356,225 @@ public class AgentService {
 			user.setCard(user.getCard() + order.getNumber());
 			logger.debug("支付成功，修改玩家房卡数量成功");
 		}
+		
+		
+		/**
+		 * 发送消息
+		 * @param pid 代理32位id
+		 * @param money 支付金额 单位元
+		 * @param goodsMsg 商品信息(商品名字，商品数量)
+		 * @param proxyNum 代理编号()
+		 * @param dateTime 订单支付时间
+		 * @param orderNum 订单编号
+		 */
+		String orderMoney = String.valueOf(order.getMoney()/100);
+		String ordernum = String.valueOf(order.getNumber());
+	    sentAll(order.getAgentUid(),orderMoney,order.getPname(),ordernum,order.getCreateTime(),order.getOrderNum());
 
 	}
 
+//	-------------------------消息推送开始
+
+	/**
+	 * 发送消息
+	 * @param pid 代理32位id
+	 * @param money 支付金额
+	 * @param goodsMsg 商品信息
+	 * @param remark 备注
+	 * @param dateTime 订单支付时间
+	 * @param orderNum 订单编号
+	 * @return
+	 */
+	public String sentAll(String pid,String money,String goodsName,String goodsNum,String dateTime,String orderNum){
+		//		String templat_id = "";//模板id
+		String clickurl="";//点击链接跳转的URl
+		String topcolor="#000";//主题颜色
+		//获取代理体系列表
+		ArrayList<Proxy> users = getProxySet(pid);
+		if(users!=null){
+			Proxy thisProxy = users.get(0);//购买者
+			String result = null;
+			for(Proxy proxy:users){
+				String open_id =  proxy.getOpenId();//用户openID、
+				JSONObject data=null;
+				if(open_id != null){
+					//创建交易提醒json包;
+					String firstMsg = "[名门斗牛]: 您有新的订单消息";
+					String remark = "代理编号："+thisProxy.getNumId() +"\n" + "订单编号:"+orderNum +"\n下单时间:"+ dateTime;
+					String goodsMsg  = "商品名称："+goodsName  + "\n" + " 商品数量："+goodsNum;
+					data = packJsonmsg(firstMsg, money, goodsMsg, remark);
+					//发送交易提醒模板消息;
+					result = sendWechatmsgToUser(open_id,wechatPayProp.getTemplat_id(),clickurl,topcolor,data);
+					if(result.equals("success")){
+						System.out.println("推送成功!");
+					}
+				}
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	
+	/**
+	 * 获取当前购买套餐的代理体系，要推送的代理信息
+	 * @param pid 当前代理的32位ids
+	 * @return 整个代理体系的详细信息
+	 */
+	public ArrayList<Proxy> getProxySet(String pid){
+		ArrayList<Proxy> list = new ArrayList<Proxy>();
+		try {
+			Proxy p = proxyRepository.find(pid, LockModeType.PESSIMISTIC_WRITE);//获取该代理
+			logger.info("获取购买套餐的代理信息{}",p);
+			int level = p.getLevel();
+			//		循环出该代理体系所有代理   
+			for(int j= 1;j<=level;j++){
+				list.add(p);
+				p = p.getParent();//获取该代理的上级
+			}
+		}catch(Exception e){
+			logger.info("获取当前购买套餐的代理体系，要推送的代理信息异常{}",e);
+			System.out.println(e);
+		}
+		logger.info("查找该代理体系所有上级,便于推送消息",list);
+		return list ;
+	}
+
+	/**
+	 * @描述: TODO(封装微信模板:订单支付成功) 
+	 * @参数@param first  头部
+	 * @参数@param orderMoneySum  总金额
+	 * @参数@param orderProductName  商品信息
+	 * @参数@param remark  说明
+	 * @参数@return
+	 * @返回类型：JSONObject
+	 * @作者：***
+	 */
+	public static JSONObject packJsonmsg(String first, String orderMoneySum, String orderProductName, String remark){
+		JSONObject json = new JSONObject();
+		try {
+			JSONObject jsonFirst = new JSONObject();
+			jsonFirst.put("value", first);
+			jsonFirst.put("color", "#173177");
+			json.put("first", jsonFirst);
+			JSONObject jsonOrderMoneySum = new JSONObject();
+			jsonOrderMoneySum.put("value", orderMoneySum);
+			jsonOrderMoneySum.put("color", "#173177");
+			json.put("orderMoneySum", jsonOrderMoneySum);
+			JSONObject jsonOrderProductName = new JSONObject();
+			jsonOrderProductName.put("value", orderProductName);
+			jsonOrderProductName.put("color", "#173177");
+			json.put("orderProductName", jsonOrderProductName);
+			JSONObject jsonRemark = new JSONObject();
+			jsonRemark.put("value", remark);
+			jsonRemark.put("color", "#173177");
+			json.put("Remark", jsonRemark);
+			logger.info("封装消息模板为{}",json);
+		} catch (JSONException e) {
+			logger.info("封装消息模板异常{}",e);
+			e.printStackTrace();
+		}
+		return json;
+	}
+
+
+
+	/**
+	 * @描述: TODO(发送模板信息给用户) 
+	 * @参数@param touser  用户的openid
+	 * @参数@param templat_id  信息模板id
+	 * @参数@param url  用户点击详情时跳转的url
+	 * @参数@param topcolor  模板字体的颜色
+	 * @参数@param data  模板详情变量 Json格式packJsonmsg()
+	 * @参数@return
+	 * @返回类型：String
+	 * @作者：***
+	 */
+	public String sendWechatmsgToUser(String touser, String templat_id, String clickurl, String topcolor, JSONObject data){
+		String tmpurl = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=ACCESS_TOKEN";
+		String token = WeiXinAccessTokenUtil.getAccessToken(wechatPayProp.getAppid(), wechatPayProp.getSecret());  //微信凭证，access_token
+		//String token = "bm_D7meDjNHT0hcg09erM2ULKg5jqzWZGvHpFvDnJpSfmym-8_470wBqFkZfvB1sJR07xlQjMmDYIm6P2rMEyg5rXHD2F_h1qgrSoUDwTPcH8Pfu-IKssQmzNITjAf4UKXPcAIAANF";
+		logger.info("获取token为{}",token);
+		String url = tmpurl.replace("ACCESS_TOKEN", token);
+		JSONObject json = new JSONObject();
+		try {
+			json.put("touser", touser);
+			json.put("template_id", templat_id);
+			json.put("url", clickurl);
+			json.put("topcolor", topcolor);
+			json.put("data", data);
+			logger.info("推送模板消息{}");
+		} catch (JSONException e) {
+			logger.info("推送模板消息异常{}",e);
+			e.printStackTrace();
+		}
+		String result = httpsRequest(url, "POST", json.toString());
+		logger.info("推送消息结果{}",result);
+		try {
+			JSONObject resultJson =  JSONObject.fromObject(result);
+			String errmsg = (String) resultJson.get("errmsg");
+			if(!"ok".equals(errmsg)){  //如果为errmsg为ok，则代表发送成功，公众号推送信息给用户了。
+				return "error";
+			}
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return "success";
+	}
+
+	/**
+	 * 发送请求推送消息
+	 * @param requestUrl 向微信发送请求的地址
+	 * @param requestMethod POST方法
+	 * @param outputStr 消息数据
+	 * @return
+	 */
+	public String httpsRequest(String requestUrl, String requestMethod, String outputStr){
+		try {
+			URL url = new URL(requestUrl);
+			HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			conn.setUseCaches(false);
+			// 设置请求方式（GET/POST）
+			conn.setRequestMethod(requestMethod);
+			conn.setRequestProperty("content-type", "application/x-www-form-urlencoded");
+			// 当outputStr不为null时向输出流写数据
+			if (null != outputStr) {
+				OutputStream outputStream = conn.getOutputStream();
+				// 注意编码格式
+				outputStream.write(outputStr.getBytes("UTF-8"));
+				outputStream.close();
+			}
+			// 从输入流读取返回内容
+			InputStream inputStream = conn.getInputStream();
+			InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+			BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+			String str = null;
+			StringBuffer buffer = new StringBuffer();
+			while ((str = bufferedReader.readLine()) != null) {
+				buffer.append(str);
+			}
+			// 释放资源
+			bufferedReader.close();
+			inputStreamReader.close();
+			inputStream.close();
+			inputStream = null;
+			conn.disconnect();
+			return buffer.toString();
+		} catch (ConnectException ce) {
+			System.out.println("连接超时：{}");
+			logger.info("连接超时，消息推送失败",ce);
+		} catch (Exception e) {
+			System.out.println("https请求异常：{}");
+			logger.info("https请求异常，消息推送失败,{}",e);
+		}
+		return null;
+	}
+
+//	-----------------------消息推送结束
+	
+	
 	/**
 	 * 获取代理商给用户的充值记录 分页查询 page从1开始
 	 * 
@@ -773,45 +1026,68 @@ public class AgentService {
 		String orderNum = OrderNum.getOrderNo();// 订单编号
 		BuyParam buyParam = new BuyParam();
 		logger.info("计算具体套餐详情");
-		// 计算具体套餐详情
+		// 计算斗牛具体套餐详情
+//		switch (selectItem) {
+//		case "1":
+//			buyParam.setPname("套餐1");// 套餐名
+//			buyParam.setMoney(300);// 金额：单位：元
+//			buyParam.setNumber(200);// 房卡数量
+//			break;
+//		case "2":
+//			buyParam.setPname("套餐2");
+//			buyParam.setMoney(750);// 金额
+//			buyParam.setNumber(500);// 房卡数量
+//			break;
+//		case "3":
+//			buyParam.setPname("套餐3");
+//			buyParam.setMoney(1475);// 金额
+//			buyParam.setNumber(1000);// 房卡数量
+//			break;
+//		case "4":
+//			buyParam.setPname("套餐4");
+//			buyParam.setMoney(2800);// 金额
+//			buyParam.setNumber(2000);// 房卡数量
+//			break;
+//		case "5":
+//			buyParam.setPname("套餐5");
+//			buyParam.setMoney(6750);// 金额
+//			buyParam.setNumber(5000);// 房卡数量
+//			break;
+//		case "6":
+//			buyParam.setPname("套餐6");
+//			buyParam.setMoney(13000);// 金额
+//			buyParam.setNumber(10000);// 房卡数量
+//			break;
+//		case "7":
+//			buyParam.setPname("自定义套餐");
+//			buyParam.setMoney((long) (num * 1.5));// 金额
+//			buyParam.setNumber(num);// 房卡数量
+//			break;
+//		}
+
+		//麻将
 		switch (selectItem) {
 		case "1":
 			buyParam.setPname("套餐1");// 套餐名
-			buyParam.setMoney(300);// 金额：单位：分
-			buyParam.setNumber(200);// 房卡数量
+			buyParam.setMoney(300);// 金额：单位：元
+			buyParam.setNumber(600);// 600钻石
 			break;
 		case "2":
 			buyParam.setPname("套餐2");
-			buyParam.setMoney(750);// 金额
-			buyParam.setNumber(500);// 房卡数量
+			buyParam.setMoney(500);// 金额
+			buyParam.setNumber(1000);// 1000颗钻石
 			break;
 		case "3":
 			buyParam.setPname("套餐3");
-			buyParam.setMoney(1475);// 金额
-			buyParam.setNumber(1000);// 房卡数量
+			buyParam.setMoney(1000);// 金额
+			buyParam.setNumber(2200);// 颗钻石
 			break;
 		case "4":
 			buyParam.setPname("套餐4");
-			buyParam.setMoney(2800);// 金额
-			buyParam.setNumber(2000);// 房卡数量
-			break;
-		case "5":
-			buyParam.setPname("套餐5");
-			buyParam.setMoney(6750);// 金额
-			buyParam.setNumber(5000);// 房卡数量
-			break;
-		case "6":
-			buyParam.setPname("套餐6");
-			buyParam.setMoney(13000);// 金额
-			buyParam.setNumber(10000);// 房卡数量
-			break;
-		case "7":
-			buyParam.setPname("自定义套餐");
-			buyParam.setMoney((long) (num * 1.5));// 金额
-			buyParam.setNumber(num);// 房卡数量
+			buyParam.setMoney(5000);// 金额
+			buyParam.setNumber(12500);// 颗钻石
 			break;
 		}
-
 		buyParam.setAgentUid(agentId);// 代理id
 		buyParam.setAgentPhone(phone);
 		buyParam.setOrderNum(orderNum);
